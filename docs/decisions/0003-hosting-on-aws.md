@@ -25,7 +25,7 @@ Option 3:
 ## Cost guardrails (keep it free)
 | Guardrail | Why |
 |---|---|
-| **Zero-spend budget + $5 monthly budget** in AWS Budgets, set up before any other resource | Email alert on the first cent of spend, and again if anything runs away |
+| **Zero-spend budget + $5 monthly budget** in AWS Budgets, set up before any other resource | Email alert on the first cent of spend, and again if anything runs away. *Implemented (2026-11-13) as a single $1/month budget alerting on actual spend above $0.01* |
 | Use the default `*.cloudfront.net` URL until launch (M5) | Defers Route 53 (about $0.50/month per hosted zone) and domain costs until we're ready |
 | No AWS WAF, no customer-managed KMS keys, no NAT gateways, no always-on compute | These are the usual surprise costs; none are needed for a static site |
 | CloudFront access logging off at first | Avoids log storage costs; revisit post-launch |
