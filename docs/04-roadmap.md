@@ -1,0 +1,94 @@
+# 04 · Roadmap
+
+Every milestone has **exit criteria**. We don't move on until they're met. Each milestone ends in something deployable (from M1 onward).
+
+**Team phases:** Israel builds M0 to M3 solo. At the end of M3 the working site is **showcased to Cristhyan, Marcy and Benjamin**, and they join as contributors from M4.
+
+| Milestone | Theme | Who | Status |
+|---|---|---|---|
+| M0 | Planning & Foundations | Israel | 🟡 In progress |
+| M1 | Scaffold, Tooling & AWS Hosting | Israel | ⚪ Not started |
+| M2 | Content Model & Data Layer | Israel | ⚪ Not started |
+| M3 | Core Pages + sibling showcase | Israel | ⚪ Not started |
+| M4 | Design, Accessibility & SEO | Family | ⚪ Not started |
+| M5 | Content Collection & Launch | Family | ⚪ Not started |
+| M6+ | Post-launch Enhancements | Family | ⚪ Backlog |
+
+---
+
+### M0: Planning & Foundations
+- [x] Vision, requirements, architecture draft, roadmap
+- [x] Stack decision ([ADR-0002](decisions/0002-static-site-nextjs-git-content.md))
+- [x] AWS hosting approach ([ADR-0003](decisions/0003-hosting-on-aws.md)): `aws-calderon`, `eu-west-2`
+- [x] Brand name: **Casa Calderon**
+- [ ] Create GitHub repo (private until launch), set branch protection on `main`, first commit
+
+**Exit:** all *blocking* open questions answered; repo on GitHub with these docs on `main`.
+
+### M1: Scaffold, Tooling & AWS Hosting
+**App & tooling**
+- [ ] Initialise Next.js app (static export), TypeScript strict, Tailwind
+- [ ] ESLint, Prettier, pre-commit hooks
+- [ ] CI workflow: lint, type-check, test, build on every PR
+
+**AWS foundation** (do these in order)
+- [ ] **Zero-spend + $5 AWS Budgets alerts** on `aws-calderon` (first, before anything else)
+- [ ] Account hygiene: root MFA, IAM Identity Center user, local AWS CLI profile via SSO
+- [ ] CDK app in `infra/`; `cdk bootstrap` in `eu-west-2`
+- [ ] Stack: private S3 bucket + CloudFront (OAC) + security headers
+- [ ] GitHub OIDC provider + least-privilege deploy role
+- [ ] Deploy workflow: on merge to `main` → build → S3 sync → CloudFront invalidation
+
+**Exit:** merging a PR to `main` automatically deploys a "hello world" page to the CloudFront URL, with no AWS keys stored in GitHub.
+
+### M2: Content Model & Data Layer
+- [ ] Zod schemas for `Member` and `Project` (incl. `kind`, `interests`, `certifications`)
+- [ ] Content loaders in `src/lib/content`
+- [ ] Placeholder content for all four members, a few projects incl. one joint
+- [ ] Unit tests: valid content passes, invalid content fails with clear messages
+
+**Exit:** `npm run build` fails on bad content and succeeds on good content.
+
+### M3: Core Pages + sibling showcase
+- [ ] Collective landing page (FR-1 to FR-7)
+- [ ] Member page (FR-10 to FR-17)
+- [ ] Projects list + filters, project detail (FR-20 to FR-23)
+- [ ] Basic e2e smoke tests (each route renders)
+- [ ] **Showcase to siblings**, collect feedback, invite them to the repo
+
+**Exit:** all *Must* requirements work with placeholder content; siblings onboarded via CONTRIBUTING.md.
+
+### M4: Design, Accessibility & SEO
+- [ ] Visual identity (wordmark, palette, typography) based on the chosen brand name
+- [ ] Responsive polish, dark mode (optional)
+- [ ] Accessibility audit (WCAG 2.2 AA)
+- [ ] Metadata, OG images, sitemap, structured data
+
+**Exit:** Lighthouse ≥ 90 across the board on key pages (NFR-1).
+
+### M5: Content Collection & Launch
+- [ ] Each member writes their real content (via PR)
+- [ ] **Each member signs off on their own page** (NFR-6)
+- [ ] Domain in Route 53, ACM certificate, DNS → CloudFront
+- [ ] Privacy-friendly analytics (or CloudFront logs)
+- [ ] Launch 🚀
+
+**Exit:** live on the custom domain with all members' approval.
+
+### M6+: Backlog (unprioritised)
+- Parent pages (`kind: "family"`)
+- "Ask the family" AI assistant on Amazon Bedrock (AI Practitioner practice)
+- Contact form (API Gateway + Lambda + SES)
+- PR preview environments on AWS
+- CloudWatch monitoring & alarms
+- Spanish translation, blog, case-study templates, testimonials
+
+---
+
+## AI-assistant efficiency log
+
+Since one goal (G8) is to learn how an AI coding assistant affects delivery, keep a short note at the end of each milestone:
+
+| Milestone | What the assistant did well | Where it needed correction | Rough time saved/lost |
+|---|---|---|---|
+| M0 | | | |
