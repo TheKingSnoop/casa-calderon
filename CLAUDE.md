@@ -6,7 +6,7 @@ Guidance for AI coding assistants working in this repository.
 **Casa Calderon**: a portfolio site for the Calderon Patiño family (Israel, Cristhyan, Marcy, Benjamin; parents possibly later). It has a collective "studio" page aimed mainly at freelance clients, individual member pages that also show personal side, and project pages. Start with [README.md](README.md) and [docs/](docs/).
 
 ## Current phase
-**Milestone 0, Planning.** Israel is building solo through M3. Check [docs/04-roadmap.md](docs/04-roadmap.md) for the current milestone before starting work, and [docs/decisions/](docs/decisions/) for accepted decisions.
+**M0 (Planning) is done; M1 (Scaffold, Tooling & AWS Hosting) is next.** Israel is building solo through M3. Repo: `TheKingSnoop/casa-calderon` (private until M3). Check [docs/04-roadmap.md](docs/04-roadmap.md) for the current milestone before starting work, and [docs/decisions/](docs/decisions/) for accepted decisions.
 
 ## Working agreements
 - Work in small, reviewable steps that map to roadmap items. Explain the plan before large changes.
