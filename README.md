@@ -2,7 +2,9 @@
 
 A shared portfolio website for the Calderon Patiño family. It's part studio page and part family introduction. A collective page shows what we can build together, for prospective clients and collaborators. Each member has their own page showing their skills, experience and projects (professional and personal), and who they are beyond the code.
 
-> **Status:** Milestone 0, Planning & Foundations. No application code yet.
+> **Status:** Milestone 0 complete (planning). Next: Milestone 1, Scaffold, Tooling & AWS Hosting.
+>
+> **Repo:** [TheKingSnoop/casa-calderon](https://github.com/TheKingSnoop/casa-calderon)
 
 ## Members
 

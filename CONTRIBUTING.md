@@ -4,7 +4,8 @@ How we work together on this repo.
 
 ## Team phases
 
-- **Phase 1 (M0 to M3): solo build.** Israel builds the foundation alone. The workflow below still applies (branches, PRs, CI), so it's habit before others join. Israel can merge his own PRs once CI passes.
+- **Phase 1 (M0 to M3): solo build.** Israel builds the foundation alone. The workflow below still applies (branches, PRs, CI), so it's habit before others join. Israel can merge his own PRs once CI passes. The repo is **private** in this phase. GitHub Free doesn't enforce branch protection on private repos, so the "no direct commits to `main`" rule is followed by habit.
+- **At the M3 showcase,** the repo goes **public** and a branch ruleset on `main` enforces PRs and passing CI.
 - **Phase 2 (M4 onward): family contributors.** After the showcase at the end of M3, Cristhyan, Marcy and Benjamin are invited to the repo and the review rules below apply in full.
 
 ## Workflow

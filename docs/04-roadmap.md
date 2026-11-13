@@ -6,8 +6,8 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 
 | Milestone | Theme | Who | Status |
 |---|---|---|---|
-| M0 | Planning & Foundations | Israel | 🟡 In progress |
-| M1 | Scaffold, Tooling & AWS Hosting | Israel | ⚪ Not started |
+| M0 | Planning & Foundations | Israel | ✅ Done |
+| M1 | Scaffold, Tooling & AWS Hosting | Israel | 🟡 Next |
 | M2 | Content Model & Data Layer | Israel | ⚪ Not started |
 | M3 | Core Pages + sibling showcase | Israel | ⚪ Not started |
 | M4 | Design, Accessibility & SEO | Family | ⚪ Not started |
@@ -21,9 +21,10 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [x] Stack decision ([ADR-0002](decisions/0002-static-site-nextjs-git-content.md))
 - [x] AWS hosting approach ([ADR-0003](decisions/0003-hosting-on-aws.md)): `aws-calderon`, `eu-west-2`
 - [x] Brand name: **Casa Calderon**
-- [ ] Create GitHub repo (private until launch), set branch protection on `main`, first commit
+- [x] First commit; GitHub repo created: [TheKingSnoop/casa-calderon](https://github.com/TheKingSnoop/casa-calderon) (**private**)
+- [x] Branch protection deferred: not available on private repos on GitHub Free; enabled when the repo goes public at M3
 
-**Exit:** all *blocking* open questions answered; repo on GitHub with these docs on `main`.
+**Exit:** all *blocking* open questions answered; repo on GitHub with these docs on `main`. ✅
 
 ### M1: Scaffold, Tooling & AWS Hosting
 **App & tooling**
@@ -54,7 +55,8 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [ ] Member page (FR-10 to FR-17)
 - [ ] Projects list + filters, project detail (FR-20 to FR-23)
 - [ ] Basic e2e smoke tests (each route renders)
-- [ ] **Showcase to siblings**, collect feedback, invite them to the repo
+- [ ] Make the repo **public** and enable a branch ruleset on `main` (require PR + passing CI); check no secrets or private info in git history first
+- [ ] **Showcase to siblings**, collect feedback, give them write access to the repo
 
 **Exit:** all *Must* requirements work with placeholder content; siblings onboarded via CONTRIBUTING.md.
 
