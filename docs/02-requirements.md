@@ -54,7 +54,7 @@ Priority uses **MoSCoW**: **M**ust / **S**hould / **C**ould / **W**on't (this re
 | NFR-5 | **Maintainability:** TypeScript strict mode, lint + format enforced in CI, tests for content validation and key components |
 | NFR-6 | **Privacy & consent:** each member signs off on their own page before launch; no home address, phone number or other sensitive data; emails obfuscated or via a contact alias; extra care for any member who is a student or not a developer |
 | NFR-7 | **Security:** no secrets in the repo; GitHub → AWS via OIDC (no long-lived keys); least-privilege IAM; private S3 bucket behind CloudFront; security headers (CSP, HSTS, etc.); root account MFA'd and unused; Dependabot enabled |
-| NFR-8 | **Cost:** target **$0/month until launch**; zero-spend + $5 AWS Budgets alerts set up before the first deploy; only planned post-launch costs are the domain and Route 53 hosted zone (see ADR-0003 cost guardrails) |
+| NFR-8 | **Cost:** target **$0/month until launch**; AWS Budgets alert on any spend above $0.01 (in place since M1 start); only planned post-launch costs are the domain and Route 53 hosted zone (see ADR-0003 cost guardrails) |
 | NFR-9 | **Infrastructure as code:** all AWS resources defined in CDK; no manual console changes to production |
 
 ## Example user stories

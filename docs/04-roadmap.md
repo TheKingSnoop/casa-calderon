@@ -33,7 +33,7 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [ ] CI workflow: lint, type-check, test, build on every PR
 
 **AWS foundation** (do these in order)
-- [ ] **Zero-spend + $5 AWS Budgets alerts** on `aws-calderon` (first, before anything else)
+- [x] **AWS Budgets alert** on `aws-calderon`: $1/month budget, email alert on any actual spend above $0.01 (set up first, before anything else)
 - [ ] Account hygiene: root MFA, IAM Identity Center user, local AWS CLI profile via SSO
 - [ ] CDK app in `infra/`; `cdk bootstrap` in `eu-west-2`
 - [ ] Stack: private S3 bucket + CloudFront (OAC) + security headers
@@ -93,4 +93,4 @@ Since one goal (G8) is to learn how an AI coding assistant affects delivery, kee
 
 | Milestone | What the assistant did well | Where it needed correction | Rough time saved/lost |
 |---|---|---|---|
-| M0 | | | |
+| M0 | Laying out a clear temmplate for execution of the first steps of the project. Provided options and made sure to ask for feedback before carrying out any changes. | Some additional information from my part was needed to help configure some account and preference settings. | Two hours saved |
