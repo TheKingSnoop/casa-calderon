@@ -14,16 +14,16 @@ Each of us could build a separate portfolio, but four disconnected sites underse
 
 ## Goals
 
-| # | Goal | How we'll know |
-|---|---|---|
-| G1 | Showcase each member's skills, experience and projects | Every member has a complete individual page |
-| G2 | Present the family as a collective that clients can hire | The collective page clearly says what we offer and how to get in touch |
-| G3 | Show professional **and** personal projects, clearly labelled | Projects can be filtered by type and by member |
-| G4 | Show who we are beyond the code | Each member page has a personal section; the collective page tells the family story |
-| G5 | Make it easy for every member to keep their own content up to date | A member can add a project without touching app code |
-| G6 | Serve as a well-documented, well-engineered project itself | Docs, CI, tests, infrastructure as code. The repo is part of the portfolio |
-| G7 | Get hands-on AWS practice (Solutions Architect, AI Practitioner) | Site hosted on AWS via CDK; AI features explored post-launch |
-| G8 | Learn and measure how an AI coding assistant affects delivery | Notes kept per milestone (see Roadmap) |
+| #   | Goal                                                               | How we'll know                                                                      |
+| --- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| G1  | Showcase each member's skills, experience and projects             | Every member has a complete individual page                                         |
+| G2  | Present the family as a collective that clients can hire           | The collective page clearly says what we offer and how to get in touch              |
+| G3  | Show professional **and** personal projects, clearly labelled      | Projects can be filtered by type and by member                                      |
+| G4  | Show who we are beyond the code                                    | Each member page has a personal section; the collective page tells the family story |
+| G5  | Make it easy for every member to keep their own content up to date | A member can add a project without touching app code                                |
+| G6  | Serve as a well-documented, well-engineered project itself         | Docs, CI, tests, infrastructure as code. The repo is part of the portfolio          |
+| G7  | Get hands-on AWS practice (Solutions Architect, AI Practitioner)   | Site hosted on AWS via CDK; AI features explored post-launch                        |
+| G8  | Learn and measure how an AI coding assistant affects delivery      | Notes kept per milestone (see Roadmap)                                              |
 
 ## Audiences (in priority order)
 

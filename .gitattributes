@@ -1,0 +1,15 @@
+# Store all text files with LF line endings in the repo, on every OS.
+# Prevents noisy "every line changed" diffs between Windows and Mac/Linux,
+# and keeps Prettier (which expects LF) happy. See docs/06-development-workflow.md.
+* text=auto eol=lf
+
+# Binary files: never touch line endings
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary

@@ -1,17 +1,26 @@
 # dependencies
-node_modules/
+/node_modules
+/.pnp
+.pnp.*
 
-# builds
-.next/
-out/
-dist/
-coverage/
-playwright-report/
-test-results/
+# next.js build output
+/.next/
+/out/
+/build
+next-env.d.ts
+*.tsbuildinfo
 
-# env & secrets
-.env
-.env*.local
+# testing
+/coverage
+/playwright-report/
+/test-results/
+
+# env & secrets (never commit these)
+.env*
+*.pem
+
+# AWS CDK output (from M1)
+cdk.out/
 
 # OS / editor
 .DS_Store
@@ -20,4 +29,5 @@ Thumbs.db
 !.vscode/extensions.json
 
 # logs
+npm-debug.log*
 *.log

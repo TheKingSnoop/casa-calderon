@@ -1,0 +1,9 @@
+.next/
+out/
+build/
+coverage/
+cdk.out/
+package-lock.json
+next-env.d.ts
+# Generated and managed by Next.js; keep it byte-identical
+AGENTS.md
