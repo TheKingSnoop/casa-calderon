@@ -76,6 +76,13 @@ Defined in `.github/workflows/ci.yml`. On every PR, GitHub starts a clean Linux 
 
 **Tip:** run `npm run check` before pushing, and CI will almost never surprise you.
 
+### `npm ci` vs `npm install`
+
+- **`npm ci`**: use this after cloning or pulling. It deletes `node_modules` and installs _exactly_ what `package-lock.json` says. It never changes the lockfile.
+- **`npm install <package>`**: use this only when you're **adding, removing or upgrading** a package. It updates `package.json` and `package-lock.json`, and both changes belong in your PR.
+
+If `package-lock.json` shows up as modified and you didn't change any packages, something's off (usually the wrong Node/npm version). Don't commit it: run `git restore package-lock.json`, check `node --version`, then `npm ci`.
+
 ## Troubleshooting
 
 **"My commit was blocked."** Read the output: it names the file, line and rule. Fix it, `git add` the file again, and commit again. Formatting issues are fixed automatically; only real code problems block you.
@@ -86,4 +93,4 @@ Defined in `.github/workflows/ci.yml`. On every PR, GitHub starts a clean Linux 
 
 **"Prettier says every line in a file is wrong."** That's probably CRLF line endings from before `.gitattributes` existed. Run `npm run format` to fix it.
 
-**"Wrong Node version" / engine warnings.** The project uses Node 26 (pinned in `.nvmrc`). See the [README](../README.md#getting-started) for setting up `fnm`.
+**`npm ERR! code EBADENGINE` / "Not compatible with your version of node".** The project requires Node 26 (pinned in `.nvmrc`), and `.npmrc` (`engine-strict=true`) stops installs on any other version on purpose. Run `node --version`. If it isn't 26, set up `fnm` (see the [README](../README.md#getting-started)), restart your terminal **and VS Code** (terminals opened before fnm was installed keep the old Node), then run `npm ci`.

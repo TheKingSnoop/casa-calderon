@@ -55,7 +55,7 @@ Read these in order if you're new to the project:
 git clone https://github.com/TheKingSnoop/casa-calderon.git
 cd casa-calderon
 fnm install      # installs the Node version from .nvmrc (first time only)
-npm install      # installs dependencies and the Git pre-commit hook
+npm ci           # installs exact locked dependencies + the Git pre-commit hook
 npm run dev      # http://localhost:3000
 ```
 
