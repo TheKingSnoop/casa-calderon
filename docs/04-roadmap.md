@@ -93,6 +93,7 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - Contact form (API Gateway + Lambda + SES)
 - PR preview environments on AWS
 - CloudWatch monitoring & alarms
+- Optional Dev Container (`.devcontainer/`) for a one-click dev environment, also usable with GitHub Codespaces (Codespaces on org repos bills the org; keep the spending limit at $0). See ADR-0004.
 - Spanish translation, blog, case-study templates, testimonials
 
 ---
