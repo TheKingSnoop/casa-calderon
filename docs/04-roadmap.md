@@ -44,9 +44,10 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [x] CDK app in [`infra/`](../infra/README.md), with tests and `cdk synth` in CI
 - [x] Stack code: private S3 bucket + CloudFront (OAC) + security headers + URL-rewrite function
 - [x] Stack code: GitHub OIDC provider + least-privilege deploy role (5 actions, `main` only)
-- [ ] `cdk bootstrap` in `eu-west-2` (touches AWS, needs confirmation)
-- [ ] `cdk diff` → `cdk deploy` the `CasaCalderonSite` stack (touches AWS, needs confirmation)
-- [ ] Deploy workflow: on merge to `main` → build → S3 sync → CloudFront invalidation
+- [x] `cdk bootstrap` in `eu-west-2` (2026-11-20)
+- [x] `cdk deploy` the `CasaCalderonSite` stack (2026-11-20): https://d2ea5d75wlmb93.cloudfront.net
+- [x] Deploy job in CI: on merge to `main`, after all checks → OIDC → S3 sync → CloudFront invalidation
+- [ ] First automatic deploy succeeds (merging the deploy-workflow PR)
 
 **Exit:** merging a PR to `main` automatically deploys a "hello world" page to the CloudFront URL, with no AWS keys stored in GitHub.
 
