@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "coverage/**",
+    // infra/ is a separate package (AWS CDK) with its own type-check and tests
+    "infra/**",
     "next-env.d.ts",
   ]),
 ]);

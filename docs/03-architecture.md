@@ -33,7 +33,8 @@ flowchart LR
 
 **Notes**
 
-- `next.config` uses `output: "export"` and `trailingSlash: true`, so `/members/israel/` maps to `members/israel/index.html` in S3 without needing URL-rewrite functions.
+- `next.config` uses `output: "export"` and `trailingSlash: true`, so pages are written as `members/israel/index.html`. CloudFront only applies its default root object at `/`, so a small **CloudFront Function** (`infra/lib/functions/url-rewrite.js`, free tier) maps `/members/israel/` to `.../index.html` and 301-redirects `/members/israel` to the trailing-slash URL.
+- The infrastructure is defined in [`infra/`](../infra/README.md) (CDK, TypeScript): resources, safety settings, trade-offs (e.g. the CSP allows `'unsafe-inline'` scripts, which Next.js static export needs) and commands.
 - All resources live in **eu-west-2 (London)**, except the ACM certificate for CloudFront, which must be in **us-east-1**. The certificate is only needed once we add a custom domain at M5. Until then we use the free `*.cloudfront.net` URL.
 - Cost guardrails (zero-spend budget, no WAF/KMS/NAT, tagging `project=casa-calderon`) are listed in ADR-0003.
 - Account setup (M1): root user MFA'd and locked away, IAM Identity Center user for daily work, budget alarm, `cdk bootstrap`.
