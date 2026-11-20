@@ -39,10 +39,13 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 **AWS foundation** (do these in order)
 
 - [x] **AWS Budgets alert** on `aws-calderon`: $1/month budget, email alert on any actual spend above $0.01 (set up first, before anything else)
-- [ ] Account hygiene: root MFA, IAM Identity Center user, local AWS CLI profile via SSO
-- [ ] CDK app in `infra/`; `cdk bootstrap` in `eu-west-2`
-- [ ] Stack: private S3 bucket + CloudFront (OAC) + security headers
-- [ ] GitHub OIDC provider + least-privilege deploy role
+- [x] Account hygiene: root MFA, IAM Identity Center (org instance, eu-west-2) user `israel`, AWS CLI profile `casa-calderon` via SSO
+- [ ] Retire the 2022 `[default]` access key (`calderon-aws-admin`) once the other project that uses it is moved to SSO
+- [x] CDK app in [`infra/`](../infra/README.md), with tests and `cdk synth` in CI
+- [x] Stack code: private S3 bucket + CloudFront (OAC) + security headers + URL-rewrite function
+- [x] Stack code: GitHub OIDC provider + least-privilege deploy role (5 actions, `main` only)
+- [ ] `cdk bootstrap` in `eu-west-2` (touches AWS, needs confirmation)
+- [ ] `cdk diff` → `cdk deploy` the `CasaCalderonSite` stack (touches AWS, needs confirmation)
 - [ ] Deploy workflow: on merge to `main` → build → S3 sync → CloudFront invalidation
 
 **Exit:** merging a PR to `main` automatically deploys a "hello world" page to the CloudFront URL, with no AWS keys stored in GitHub.

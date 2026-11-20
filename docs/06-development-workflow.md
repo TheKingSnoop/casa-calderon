@@ -61,6 +61,11 @@ Windows uses CRLF line endings; Mac/Linux use LF. This file makes the repo alway
 
 Defined in `.github/workflows/ci.yml`. On every PR, GitHub starts a clean Linux machine, installs exactly what's in `package-lock.json` (`npm ci`), and runs every check across the **whole** project. This catches what the hook can't: skipped hooks, problems that only appear when files interact, "works on my machine" issues, and build failures.
 
+CI has two jobs that run in parallel:
+
+- **Format, lint, type-check, test, build:** the website (repo root).
+- **Infra:** the AWS CDK app in `infra/` (type-check, tests, `cdk synth`). It never talks to AWS. See [infra/README.md](../infra/README.md).
+
 ## Everyday commands
 
 | Command              | What it does                                                  |

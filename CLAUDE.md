@@ -39,3 +39,12 @@ Node 26 (`.nvmrc`, managed with fnm). Details: [docs/06-development-workflow.md]
 - `npm run build`: static export to `out/`
 - `npm run check`: format check + lint + type-check + tests (run before opening a PR)
 - `npm run format` / `npm run lint` / `npm run typecheck` / `npm test`
+
+### Infrastructure (`infra/`, a separate npm package)
+
+AWS CDK app; see [infra/README.md](infra/README.md) and CDK's assistant guidance in [infra/AGENTS.md](infra/AGENTS.md) (read the service README in `node_modules/aws-cdk-lib/<service>/` before writing constructs).
+
+- Safe, no AWS: `npm run typecheck`, `npm test`, `npm run synth`
+- Read-only AWS: `npm run whoami`, `npm run diff`
+- **Changes AWS, needs explicit confirmation each time:** `npm run bootstrap`, `npm run deploy`
+- Always use the `casa-calderon` profile (the scripts do). Never rely on `[default]`, which holds an old long-lived key.

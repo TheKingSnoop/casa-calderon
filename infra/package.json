@@ -1,0 +1,32 @@
+{
+  "name": "casa-calderon-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWS CDK infrastructure for Casa Calderon (S3 + CloudFront + GitHub OIDC deploy role)",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "synth": "cdk synth",
+    "diff": "cdk diff --profile casa-calderon",
+    "deploy": "cdk deploy --profile casa-calderon",
+    "bootstrap": "cdk bootstrap aws://804450520614/eu-west-2 --profile casa-calderon",
+    "whoami": "aws sts get-caller-identity --profile casa-calderon --query Arn --output text"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.275.0",
+    "constructs": "^10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "aws-cdk": "^2.1148.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  },
+  "allowScripts": {
+    "esbuild": false
+  }
+}
