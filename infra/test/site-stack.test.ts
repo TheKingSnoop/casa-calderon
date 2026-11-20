@@ -11,6 +11,7 @@ beforeAll(() => {
   const stack = new SiteStack(app, "TestSite", {
     env: { account: config.account, region: config.region },
     githubRepo: config.githubRepo,
+    githubOidcRepo: config.githubOidcRepo,
     deployBranch: config.deployBranch,
     resourceTags: config.tags,
   });
@@ -107,8 +108,9 @@ describe("GitHub deploy role", () => {
             Condition: {
               StringEquals: {
                 "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+                // GitHub immutable subject: owner@ownerId/repo@repoId
                 "token.actions.githubusercontent.com:sub":
-                  "repo:TheKingSnoop/casa-calderon:ref:refs/heads/main",
+                  "repo:TheKingSnoop@138521589/casa-calderon@1456781007:ref:refs/heads/main",
               },
             },
           }),

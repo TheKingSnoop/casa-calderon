@@ -20,15 +20,15 @@ flowchart LR
   R -->|invalidate cache| CF
 ```
 
-| Resource                                  | Why it exists                                                                                                                                                    | Cost                                               |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| **S3 bucket** (private)                   | Stores the static files from `next build` (`out/`). Public access blocked; HTTPS-only; encrypted with SSE-S3                                                     | Pennies at most (a few MB)                         |
-| **Origin Access Control** + bucket policy | Only _this_ CloudFront distribution can read the bucket, using signed requests                                                                                   | Free                                               |
-| **CloudFront distribution**               | HTTPS, global cache, gzip/brotli, HTTP/2 + 3. `PriceClass_100` (Europe + North America edges)                                                                    | Free tier (1 TB transfer / 10M requests per month) |
-| **CloudFront Function** `url-rewrite.js`  | `/members/israel/` → `.../index.html`; `/members/israel` → 301 to the trailing-slash URL                                                                         | Free tier (2M invocations per month)               |
-| **Response headers policy**               | Security headers: CSP, HSTS (1 year), `X-Content-Type-Options`, `X-Frame-Options: DENY`, Referrer & Permissions policy                                           | Free                                               |
-| **IAM OIDC provider** (GitHub)            | Lets GitHub Actions prove its identity to AWS, so there are **no stored AWS keys**                                                                               | Free                                               |
-| **IAM deploy role**                       | Assumable **only** by workflows on `TheKingSnoop/casa-calderon` `main`. Can only list/get/put/delete objects in the site bucket and invalidate this distribution | Free                                               |
+| Resource                                  | Why it exists                                                                                                                                                                                   | Cost                                               |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| **S3 bucket** (private)                   | Stores the static files from `next build` (`out/`). Public access blocked; HTTPS-only; encrypted with SSE-S3                                                                                    | Pennies at most (a few MB)                         |
+| **Origin Access Control** + bucket policy | Only _this_ CloudFront distribution can read the bucket, using signed requests                                                                                                                  | Free                                               |
+| **CloudFront distribution**               | HTTPS, global cache, gzip/brotli, HTTP/2 + 3. `PriceClass_100` (Europe + North America edges)                                                                                                   | Free tier (1 TB transfer / 10M requests per month) |
+| **CloudFront Function** `url-rewrite.js`  | `/members/israel/` → `.../index.html`; `/members/israel` → 301 to the trailing-slash URL                                                                                                        | Free tier (2M invocations per month)               |
+| **Response headers policy**               | Security headers: CSP, HSTS (1 year), `X-Content-Type-Options`, `X-Frame-Options: DENY`, Referrer & Permissions policy                                                                          | Free                                               |
+| **IAM OIDC provider** (GitHub)            | Lets GitHub Actions prove its identity to AWS, so there are **no stored AWS keys**                                                                                                              | Free                                               |
+| **IAM deploy role**                       | Assumable **only** by workflows on `TheKingSnoop/casa-calderon` `main` (matched by immutable repo ID). Can only list/get/put/delete objects in the site bucket and invalidate this distribution | Free                                               |
 
 Every taggable resource gets `project=casa-calderon` for Cost Explorer.
 
@@ -43,6 +43,7 @@ Every taggable resource gets `project=casa-calderon` for Cost Explorer.
 ### Notes and trade-offs
 
 - **CSP allows `'unsafe-inline'` scripts.** Next.js static export inlines small bootstrap scripts, and without a server we can't add per-request nonces. Everything else is locked to `'self'`. Revisit if we add hashes at build time.
+- **GitHub uses the _immutable subject_ format for this repo.** The OIDC `sub` claim is `repo:TheKingSnoop@138521589/casa-calderon@1456781007:ref:refs/heads/main` (owner and repo **numeric IDs**), not `repo:TheKingSnoop/casa-calderon:...`. IDs are never reused, so a deleted or renamed repo recreated under the same name can't assume our role. The value lives in `lib/config.ts` (`githubOidcRepo`). If deploys fail with `Not authorized to perform sts:AssumeRoleWithWebIdentity`, compare it with `gh api repos/TheKingSnoop/casa-calderon/actions/oidc/customization/sub`, or look up the failed `AssumeRoleWithWebIdentity` event in CloudTrail (its `userName` is the exact `sub` GitHub sent).
 - **The GitHub OIDC provider is account-wide.** AWS allows only one per URL. Any other project in this account that deploys from GitHub should reference this provider instead of creating its own.
 - **Missing pages:** S3 answers `403` for files that don't exist (we deliberately don't grant `ListBucket` to CloudFront), so `403` and `404` both show `/404.html` with status `404`.
 
