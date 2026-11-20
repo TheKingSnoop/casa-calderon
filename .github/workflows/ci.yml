@@ -1,19 +1,22 @@
 name: CI
 
 # Runs on every pull request, and on main after a merge.
+# On main, if every check passes, the `deploy` job publishes the site to AWS.
 on:
   pull_request:
   push:
     branches: [main]
 
-# Least privilege: CI only needs to read the code.
+# Least privilege: by default jobs can only read the code.
+# (The deploy job adds `id-token: write` for itself only.)
 permissions:
   contents: read
 
 # If you push again to the same PR, cancel the older run (saves Actions minutes).
+# On main, never cancel: a newer merge simply queues behind a running deploy.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   verify:
@@ -48,6 +51,16 @@ jobs:
       - name: Build static site (Next.js)
         run: npm run build
 
+      # Hand the exact build that passed the checks to the deploy job.
+      - name: Upload site build (main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v7
+        with:
+          name: site
+          path: out/
+          retention-days: 1
+          if-no-files-found: error
+
   infra:
     name: Infra (type-check, test, cdk synth)
     runs-on: ubuntu-latest
@@ -79,3 +92,63 @@ jobs:
       # credentials because the stack's account and region are explicit.
       - name: Synthesize CloudFormation (cdk synth)
         run: npm run synth -- --quiet
+
+  deploy:
+    name: Deploy site to AWS (S3 + CloudFront)
+    # Only after a merge to main, and only if every check above passed.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [verify, infra]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write # lets this job request a GitHub OIDC token for AWS
+    env:
+      SITE_BUCKET: ${{ vars.SITE_BUCKET }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+    steps:
+      - name: Download the tested site build
+        uses: actions/download-artifact@v8
+        with:
+          name: site
+          path: out
+
+      # Exchanges the OIDC token for short-lived credentials (1h) for the
+      # casa-calderon-github-deploy role. No AWS keys are stored in GitHub.
+      # Third-party action receiving credentials: pinned to a commit SHA (v6.3.0).
+      - name: Get temporary AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: eu-west-2
+          allowed-account-ids: "804450520614"
+
+      # 1. Hashed assets first (new files only add, nothing breaks mid-deploy).
+      #    Their names change whenever their content does, so cache for a year.
+      - name: Upload static assets (cached 1 year)
+        run: >
+          aws s3 sync out/_next/static "s3://$SITE_BUCKET/_next/static"
+          --cache-control "public,max-age=31536000,immutable"
+
+      # 2. HTML and everything else: browsers always re-check for a new version.
+      #    --delete removes pages that no longer exist.
+      - name: Upload pages (always revalidated)
+        run: >
+          aws s3 sync out "s3://$SITE_BUCKET" --delete
+          --exclude "_next/static/*"
+          --cache-control "public,max-age=0,must-revalidate"
+
+      # 3. Now that the new HTML is live, remove asset files nothing references.
+      - name: Remove old static assets
+        run: aws s3 sync out/_next/static "s3://$SITE_BUCKET/_next/static" --delete
+
+      # Tell CloudFront to drop its cached copies (1 path; 1,000 free per month).
+      - name: Invalidate CloudFront cache
+        run: >
+          aws cloudfront create-invalidation
+          --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID"
+          --paths "/*"
+          --query "Invalidation.[Id,Status]" --output text
+
+      - name: Summary
+        run: echo "Deployed to https://d2ea5d75wlmb93.cloudfront.net" >> "$GITHUB_STEP_SUMMARY"

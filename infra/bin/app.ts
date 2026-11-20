@@ -13,6 +13,8 @@ new SiteStack(app, "CasaCalderonSite", {
     "Casa Calderon static site: S3 + CloudFront + GitHub OIDC deploy role",
   // Blocks `cdk destroy` / stack deletion until protection is turned off on purpose.
   terminationProtection: true,
+  // Tag the CloudFormation stack itself (SiteStack also tags every resource).
+  tags: config.tags,
   githubRepo: config.githubRepo,
   deployBranch: config.deployBranch,
   resourceTags: config.tags,

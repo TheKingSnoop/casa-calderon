@@ -30,7 +30,7 @@ flowchart TD
     K --> H
     J -->|Yes| L["✅ Green check<br/>review & merge"]
     L --> M["main"]
-    M -.->|"later in M1"| N["Auto-deploy to AWS<br/>(S3 + CloudFront)"]
+    M --> N["CI runs again on main,<br/>then the deploy job publishes<br/>to AWS (S3 + CloudFront)"]
 ```
 
 Running in the background on every commit, `.gitattributes` makes the repo store all text files with **LF** line endings, whatever OS you're on.
@@ -61,23 +61,49 @@ Windows uses CRLF line endings; Mac/Linux use LF. This file makes the repo alway
 
 Defined in `.github/workflows/ci.yml`. On every PR, GitHub starts a clean Linux machine, installs exactly what's in `package-lock.json` (`npm ci`), and runs every check across the **whole** project. This catches what the hook can't: skipped hooks, problems that only appear when files interact, "works on my machine" issues, and build failures.
 
-CI has two jobs that run in parallel:
+CI has two check jobs that run in parallel, plus a deploy job on `main`:
 
 - **Format, lint, type-check, test, build:** the website (repo root).
 - **Infra:** the AWS CDK app in `infra/` (type-check, tests, `cdk synth`). It never talks to AWS. See [infra/README.md](../infra/README.md).
+- **Deploy (only on `main`, only if both checks pass):** publishes the site. See below.
+
+### How a merge becomes a live site
+
+```mermaid
+sequenceDiagram
+    participant GH as GitHub Actions (main)
+    participant STS as AWS STS
+    participant S3 as S3 bucket
+    participant CF as CloudFront
+    GH->>GH: verify + infra jobs pass, build uploaded as artifact
+    GH->>STS: OIDC token ("I am TheKingSnoop/casa-calderon on main")
+    STS-->>GH: temporary credentials for casa-calderon-github-deploy (1h)
+    GH->>S3: sync _next/static/ (cache 1 year)
+    GH->>S3: sync pages + --delete (always revalidate)
+    GH->>S3: remove unreferenced old assets
+    GH->>CF: invalidate /*
+    Note over CF: New version live within a minute or two
+```
+
+- **The exact build that passed the checks is the one deployed.** It's passed between jobs as an artifact, not rebuilt.
+- **No AWS keys are stored in GitHub.** The deploy role only trusts this repo's `main` branch and can only touch the site bucket and distribution.
+- **The values it needs** (role ARN, bucket, distribution ID) are repository **variables** (Settings → Secrets and variables → Actions → Variables). None of them are secrets.
+- **Caching:** files in `_next/static/` have content hashes in their names, so they're cached for a year. HTML is always revalidated, so visitors see new content right after a deploy.
+- **If a deploy fails,** the previous version stays live. Fix forward with a new PR, or re-run the job from the Actions tab.
 
 ## Everyday commands
 
-| Command              | What it does                                                  |
-| -------------------- | ------------------------------------------------------------- |
-| `npm run dev`        | Start the local dev server at http://localhost:3000           |
-| `npm run build`      | Build the static site into `out/` (what gets deployed)        |
-| `npm run check`      | Run format check + lint + type-check + tests (CI minus build) |
-| `npm run format`     | Auto-format everything with Prettier                          |
-| `npm run lint`       | Run ESLint                                                    |
-| `npm run typecheck`  | Generate Next.js route types, then run TypeScript             |
-| `npm test`           | Run tests once                                                |
-| `npm run test:watch` | Re-run tests as you change files                              |
+| Command              | What it does                                                                                                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`        | Start the local dev server at http://localhost:3000                                                                                                                         |
+| `npm run build`      | Build the static site into `out/` (what gets deployed)                                                                                                                      |
+| `npm run check`      | Run format check + lint + type-check + tests (CI minus build)                                                                                                               |
+| `npm run format`     | Auto-format everything with Prettier                                                                                                                                        |
+| `npm run lint`       | Run ESLint                                                                                                                                                                  |
+| `npm run typecheck`  | Generate Next.js route types, then run TypeScript                                                                                                                           |
+| `npm test`           | Run tests once                                                                                                                                                              |
+| `npm run test:watch` | Re-run tests as you change files                                                                                                                                            |
+| `npm run infra:*`    | Infra shortcuts from the repo root: `infra:install`, `infra:check`, `infra:synth`, `infra:whoami`, `infra:diff`, `infra:deploy` (see [infra/README.md](../infra/README.md)) |
 
 **Tip:** run `npm run check` before pushing, and CI will almost never surprise you.
 
