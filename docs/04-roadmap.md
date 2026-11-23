@@ -8,8 +8,8 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 | --------- | ------------------------------- | ------ | -------------- |
 | M0        | Planning & Foundations          | Israel | ✅ Done        |
 | M1        | Scaffold, Tooling & AWS Hosting | Israel | ✅ Done        |
-| M2        | Content Model & Data Layer      | Israel | 🟡 Next        |
-| M3        | Core Pages + sibling showcase   | Israel | ⚪ Not started |
+| M2        | Content Model & Data Layer      | Israel | ✅ Done        |
+| M3        | Core Pages + sibling showcase   | Israel | 🟡 Next        |
 | M4        | Design, Accessibility & SEO     | Family | ⚪ Not started |
 | M5        | Content Collection & Launch     | Family | ⚪ Not started |
 | M6+       | Post-launch Enhancements        | Family | ⚪ Backlog     |
@@ -63,9 +63,9 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [x] Content loader + store in `src/lib/content` (drafts hidden on the live site)
 - [x] Build gate: `prebuild` → `npm run content:check`
 - [x] Unit tests: valid content passes, invalid content fails with clear messages (23 tests)
-- [ ] Placeholder content for all four members, a few projects incl. one joint
+- [x] Placeholder content: 4 members (names + roles only), 3 projects (this website, a joint example, a confidential example). All `published: false`
 
-**Exit:** `npm run build` fails on bad content and succeeds on good content.
+**Exit:** `npm run build` fails on bad content and succeeds on good content. ✅ (verified on PR #9: bad file → exit 1 with a located message; good content → exit 0)
 
 ### M3: Core Pages + sibling showcase
 
