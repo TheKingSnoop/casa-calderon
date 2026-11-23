@@ -46,67 +46,41 @@ flowchart LR
 - **Contact form:** API Gateway + Lambda + SES, with spam protection.
 - **Monitoring:** CloudWatch dashboards/alarms, CloudFront access logs.
 
-## Content model (draft)
+## Content model
 
-```ts
-type Member = {
-  slug: string; // "israel" → /members/israel
-  name: string; // "Israel Calderon"
-  kind: "core" | "family"; // core = developer members; family = e.g. parents (FR-18)
-  role: string; // "Full-stack Developer"
-  tagline?: string;
-  bio: string; // Markdown body
-  avatar: string; // path to image
-  skills?: { category: string; items: string[] }[]; // optional for non-dev members
-  experience?: {
-    title: string;
-    org: string;
-    start: string;
-    end?: string;
-    summary?: string;
-    kind: "work" | "education" | "achievement";
-  }[];
-  certifications?: {
-    name: string;
-    issuer: string;
-    date: string;
-    url?: string;
-  }[];
-  interests?: string[]; // "Beyond the code" (FR-16)
-  links: {
-    github?: string;
-    linkedin?: string;
-    website?: string;
-    cv?: string;
-    email?: string;
-  };
-  status?: string; // "Available for freelance"
-  order: number; // display order on the collective page
-};
+> **Source of truth:** [`src/lib/content/schema.ts`](../src/lib/content/schema.ts) (Zod). Decision and trade-offs: [ADR-0005](decisions/0005-content-pipeline.md). How to write content: [CONTRIBUTING.md](../CONTRIBUTING.md#adding-your-content).
 
-type Project = {
-  slug: string;
-  title: string;
-  summary: string; // one-liner for cards
-  body: string; // MDX: problem, approach, outcome
-  members: string[]; // Member slugs; 2+ = joint project
-  type: "professional" | "personal";
-  confidential?: boolean; // hide code/links (FR-23)
-  tech: string[];
-  links?: { repo?: string; live?: string; caseStudy?: string };
-  images?: { src: string; alt: string }[];
-  date: string; // ISO, for sorting
-  featured?: boolean; // show on collective page
-};
+Each member and project is **one Markdown file**: YAML frontmatter for structured data, the Markdown body for prose. The file name is the URL slug.
+
+| Collection | File                         | Frontmatter (required in **bold**)                                                                                                                                                                           | Body                      |
+| ---------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
+| Member     | `content/members/<slug>.md`  | **name**, **role**, **order**, `kind` (`core`/`family`), `published`, `tagline`, `avatar`, `status`, `skills`, `experience`, `certifications`, `interests`, `links`                                          | Bio (required for `core`) |
+| Project    | `content/projects/<slug>.md` | **title**, **summary** (max 160 characters), **members** (member slugs), **type** (`professional`/`personal`), **date**, `confidential`, `tech`, `links`, `images` (`alt` required), `featured`, `published` | Write-up                  |
+
+### Data flow
+
+```mermaid
+flowchart LR
+  F[content/*.md] --> GM[gray-matter<br/>frontmatter + body]
+  GM --> Z{Zod schemas<br/>+ cross-checks}
+  Z -->|any problem| E[ContentError<br/>lists every issue<br/>build fails]
+  Z -->|valid| S[Content store<br/>src/lib/content]
+  S -->|published only<br/>live site| P[Pages]
+  S -->|drafts too<br/>npm run dev| P
 ```
+
+- **Validation runs before every build** (`prebuild` → `npm run content:check`) and in CI (a test loads the real `content/`). It covers **drafts too**.
+- **Strict:** unknown keys (typos) are errors; URLs and emails are validated; project `members` must exist; confidential projects can't have links.
+- **Drafts:** `published: false` (the default) is shown only in `npm run dev` (or with `SHOW_DRAFTS=true`). The live site shows only `published: true` (NFR-6 sign-off).
+- **Pages read content only through** `getMembers()`, `getMember(slug)`, `getProjects({ member, type })`, `getProject(slug)` in `src/lib/content`. Never `fs` directly.
 
 ## Folder structure
 
 ```
 family-portfolio/
 ├─ content/
-│  ├─ members/            # israel.mdx, cristhyan.mdx, marcy.mdx, benjamin.mdx
-│  └─ projects/           # one file per project
+│  ├─ members/            # israel.md, cristhyan.md, marcy.md, benjamin.md
+│  └─ projects/           # one .md file per project
 ├─ public/images/         # avatars, project screenshots
 ├─ src/
 │  ├─ app/                # Next.js routes
@@ -115,7 +89,8 @@ family-portfolio/
 │  │  ├─ projects/page.tsx             # project list + filters
 │  │  └─ projects/[slug]/page.tsx      # project detail
 │  ├─ components/         # UI components
-│  └─ lib/content/        # loaders + Zod schemas (single data layer)
+│  └─ lib/content/        # Zod schemas, loader, content store (single data layer)
+├─ scripts/               # check-content.ts (runs before every build)
 ├─ infra/                 # AWS CDK app (TypeScript)
 ├─ tests/                 # e2e tests
 ├─ docs/                  # this documentation
