@@ -47,6 +47,8 @@ AWS CDK app; see [infra/README.md](infra/README.md) and CDK's assistant guidance
 - From the repo root, the same commands exist as `npm run infra:<name>` (e.g. `infra:diff`).
 - Site deploys happen automatically in CI (the `deploy` job in `.github/workflows/ci.yml`) on merge to `main`. Never run `aws s3 sync` / invalidations by hand without confirmation.
 - Safe, no AWS: `npm run typecheck`, `npm test`, `npm run synth`
-- Read-only AWS: `npm run whoami`, `npm run diff`
+- Read-only AWS (read-only profile): `npm run whoami`, `npm run diff`
+- Admin, read-only effect: `npm run whoami:admin`; `npm run diff:changeset` creates a temporary change set
 - **Changes AWS, needs explicit confirmation each time:** `npm run bootstrap`, `npm run deploy`
-- Always use the `casa-calderon` profile (the scripts do). Never rely on `[default]`, which holds an old long-lived key.
+- **Use the `casa-calderon-readonly` profile for every check** (`whoami`, `diff`, describe/list/get calls). Use the admin profile `casa-calderon` only for changes the user has explicitly confirmed (`deploy`, `bootstrap`) or for `diff:changeset` right before a deploy. Never rely on `[default]`, which holds an old long-lived key.
+- If an SSO session has expired, ask the user to run `aws sso login --sso-session casa-calderon` (it opens a browser). Don't try to log in yourself.

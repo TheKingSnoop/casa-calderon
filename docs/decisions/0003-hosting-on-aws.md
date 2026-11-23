@@ -37,6 +37,13 @@ Option 3:
 
 Expected cost before launch: **$0 or a few cents a month**. A small static site sits well within S3/CloudFront free allowances. Check the AWS pricing pages for current free-tier terms on the `aws-calderon` account, since they depend on the account's age and plan. After launch, the domain registration and hosted zone are the only planned costs.
 
+## Access model (added 2026-11-23)
+
+- **People:** IAM Identity Center user with two permission sets. `ReadOnlyAccess` (profile `casa-calderon-readonly`) is the default for checks; `AdministratorAccess` (profile `casa-calderon`) is only for confirmed deploys. Least privilege for daily work, and the AI assistant does all of its checks read-only.
+- **CI:** GitHub OIDC role trusted via the immutable subject, with 5 actions on this bucket and distribution only.
+- **Account baseline (console):** Budgets alert, Identity Center, IAM Access Analyzer (external access, free).
+- **Deferred:** scope down the CDK bootstrap execution role (`AdministratorAccess` by default) before anyone else can deploy infrastructure.
+
 ## Consequences
 
 - Strong hands-on AWS practice, and `infra/` becomes portfolio material in its own right.
