@@ -58,10 +58,12 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 
 ### M2: Content Model & Data Layer
 
-- [ ] Zod schemas for `Member` and `Project` (incl. `kind`, `interests`, `certifications`)
-- [ ] Content loaders in `src/lib/content`
+- [x] Decision: Markdown + own loader + `published` flag ([ADR-0005](decisions/0005-content-pipeline.md))
+- [x] Zod schemas for `Member` and `Project` (incl. `kind`, `interests`, `certifications`, `published`)
+- [x] Content loader + store in `src/lib/content` (drafts hidden on the live site)
+- [x] Build gate: `prebuild` → `npm run content:check`
+- [x] Unit tests: valid content passes, invalid content fails with clear messages (23 tests)
 - [ ] Placeholder content for all four members, a few projects incl. one joint
-- [ ] Unit tests: valid content passes, invalid content fails with clear messages
 
 **Exit:** `npm run build` fails on bad content and succeeds on good content.
 

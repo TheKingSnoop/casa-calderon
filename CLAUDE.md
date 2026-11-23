@@ -31,13 +31,20 @@ This is **Next.js 16.4**, which has breaking changes compared with older version
 
 @AGENTS.md
 
+## Content rules
+
+- Pages read content **only** via `src/lib/content` (`getMembers`, `getMember`, `getProjects`, `getProject`). Never read `content/` with `fs` in pages or components. Schemas live in `src/lib/content/schema.ts` ([ADR-0005](docs/decisions/0005-content-pipeline.md)).
+- **Never set `published: true` on a member's page or project on their behalf.** Publishing is each member's own sign-off (NFR-6).
+- Placeholder content may only contain what's already public in the repo (names, roles). Don't invent employers, schools, locations or other personal details.
+
 ## Commands
 
 Node 26 (`.nvmrc`, managed with fnm). Details: [docs/06-development-workflow.md](docs/06-development-workflow.md).
 
 - `npm run dev`: dev server on http://localhost:3000
 - `npm run build`: static export to `out/`
-- `npm run check`: format check + lint + type-check + tests (run before opening a PR)
+- `npm run check`: format check + lint + type-check + tests + content check (run before opening a PR)
+- `npm run content:check`: validate everything in `content/` (also runs automatically before `npm run build`)
 - `npm run format` / `npm run lint` / `npm run typecheck` / `npm test`
 
 ### Infrastructure (`infra/`, a separate npm package)

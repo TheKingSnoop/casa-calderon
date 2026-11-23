@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "next dev",
+    "content:check": "tsx scripts/check-content.ts",
+    "prebuild": "npm run content:check",
     "build": "next build",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
@@ -15,7 +17,7 @@
     "test:watch": "vitest",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm test",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run content:check",
     "prepare": "husky",
     "infra:install": "npm --prefix infra ci",
     "infra:check": "npm --prefix infra run typecheck && npm --prefix infra test",
@@ -33,9 +35,11 @@
     "*.{json,md,css,yml,yaml}": "prettier --write"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "next": "16.4.6",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "4.3.3",
@@ -49,7 +53,11 @@
     "lint-staged": "^17.6.0",
     "prettier": "^3.10.1",
     "tailwindcss": "4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.1.0"
+  },
+  "allowScripts": {
+    "esbuild": false
   }
 }
