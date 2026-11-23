@@ -3,7 +3,10 @@ import type { Project } from "@/lib/content";
 import { formatMonth } from "@/lib/format";
 import { Badge, DraftBadge } from "./badges";
 
-export function ProjectCard({ project }: { project: Project }) {
+/** What a card needs: everything except the (possibly long) Markdown body. */
+export type ProjectCardData = Omit<Project, "body">;
+
+export function ProjectCard({ project }: { project: ProjectCardData }) {
   return (
     <article className="relative flex flex-col gap-3 rounded-lg border border-border p-5 transition-colors hover:border-accent">
       <div className="flex flex-wrap items-center gap-2">
