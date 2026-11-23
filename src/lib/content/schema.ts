@@ -101,6 +101,28 @@ export type Member = MemberFrontmatter & {
   bio: string;
 };
 
+// ── Collective (content/collective.md: the home page) ───────────────────────
+
+export const collectiveFrontmatterSchema = z.strictObject({
+  /** Hero headline under the site name */
+  tagline: nonEmpty.max(120, "Keep the tagline to 120 characters or fewer"),
+  /** One or two sentences under the tagline */
+  pitch: nonEmpty.max(300, "Keep the pitch to 300 characters or fewer"),
+  /** "What we offer" (FR-4) */
+  services: z
+    .array(z.strictObject({ title: nonEmpty, description: nonEmpty }))
+    .min(1, "List at least one service"),
+  /** "Work with us" (FR-6): text above the list of members */
+  contact: nonEmpty.optional(),
+  /** Family sign-off: only `true` replaces "Coming soon" on the live site */
+  published: z.boolean().default(false),
+});
+
+export type Collective = z.infer<typeof collectiveFrontmatterSchema> & {
+  /** Markdown body: "Our story" (FR-7) */
+  story: string;
+};
+
 // ── Project ─────────────────────────────────────────────────────────────────
 
 export const projectFrontmatterSchema = z

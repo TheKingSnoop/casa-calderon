@@ -33,8 +33,8 @@ This is **Next.js 16.4**, which has breaking changes compared with older version
 
 ## Content rules
 
-- Pages read content **only** via `src/lib/content` (`getMembers`, `getMember`, `getProjects`, `getProject`). Never read `content/` with `fs` in pages or components. Schemas live in `src/lib/content/schema.ts` ([ADR-0005](docs/decisions/0005-content-pipeline.md)).
-- **Never set `published: true` on a member's page or project on their behalf.** Publishing is each member's own sign-off (NFR-6).
+- Pages read content **only** via `src/lib/content` (`getCollective`, `getMembers`, `getMember`, `getProjects`, `getProject`). Never read `content/` with `fs` in pages or components. Schemas live in `src/lib/content/schema.ts` ([ADR-0005](docs/decisions/0005-content-pipeline.md)).
+- **Never set `published: true` on a member's page or project on their behalf.** Publishing is each member's own sign-off (NFR-6). Publishing `content/collective.md` (the home page) is a whole-family decision.
 - Placeholder content may only contain what's already public in the repo (names, roles). Don't invent employers, schools, locations or other personal details.
 
 ## Commands

@@ -128,6 +128,7 @@ describe("loadContent: valid content", () => {
 
   it("treats a missing content folder as empty", () => {
     expect(loadContent(path.join(tmpdir(), "does-not-exist-content"))).toEqual({
+      collective: null,
       members: [],
       projects: [],
     });
@@ -283,6 +284,57 @@ describe("loadContent: invalid content", () => {
       ),
     });
     expect(errors).toHaveLength(3); // ana: name, ben: order, x: unknown member (ana invalid)
+  });
+});
+
+// ── Collective (content/collective.md) ──────────────────────────────────────
+
+const collective = md(
+  `
+tagline: Building together.
+pitch: A family of developers.
+services:
+  - title: Web apps
+    description: Full-stack web applications.
+`,
+  "Our story starts here.",
+);
+
+describe("collective.md", () => {
+  it("loads the home page content with the body as the story", () => {
+    const content = loadContent(makeContent({ "collective.md": collective }));
+    expect(content.collective).toMatchObject({
+      tagline: "Building together.",
+      services: [{ title: "Web apps" }],
+      published: false,
+      story: "Our story starts here.",
+    });
+  });
+
+  it("is optional (no file means no home page content yet)", () => {
+    expect(loadContent(makeContent(validFiles)).collective).toBeNull();
+  });
+
+  it("is validated like everything else", () => {
+    const errors = errorsFor({
+      "collective.md": md("tagline: Hi\npitch: P\nservices: []\nslogan: typo"),
+    });
+    expect(errors).toEqual([
+      expect.stringContaining(
+        "content/collective.md → services: List at least one service",
+      ),
+      expect.stringContaining('Unrecognized key: "slogan"'),
+    ]);
+  });
+
+  it("is hidden until published (unless drafts are shown)", () => {
+    const rootDir = makeContent({ "collective.md": collective });
+    expect(
+      createContentStore({ rootDir, showDrafts: false }).getCollective(),
+    ).toBeNull();
+    expect(
+      createContentStore({ rootDir, showDrafts: true }).getCollective(),
+    ).not.toBeNull();
   });
 });
 
