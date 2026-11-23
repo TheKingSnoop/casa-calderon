@@ -7,8 +7,8 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 | Milestone | Theme                           | Who    | Status         |
 | --------- | ------------------------------- | ------ | -------------- |
 | M0        | Planning & Foundations          | Israel | ✅ Done        |
-| M1        | Scaffold, Tooling & AWS Hosting | Israel | 🟡 In progress |
-| M2        | Content Model & Data Layer      | Israel | ⚪ Not started |
+| M1        | Scaffold, Tooling & AWS Hosting | Israel | ✅ Done        |
+| M2        | Content Model & Data Layer      | Israel | 🟡 Next        |
 | M3        | Core Pages + sibling showcase   | Israel | ⚪ Not started |
 | M4        | Design, Accessibility & SEO     | Family | ⚪ Not started |
 | M5        | Content Collection & Launch     | Family | ⚪ Not started |
@@ -47,9 +47,9 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [x] `cdk bootstrap` in `eu-west-2` (2026-11-20)
 - [x] `cdk deploy` the `CasaCalderonSite` stack (2026-11-20): https://d2ea5d75wlmb93.cloudfront.net
 - [x] Deploy job in CI: on merge to `main`, after all checks → OIDC → S3 sync → CloudFront invalidation
-- [ ] First automatic deploy succeeds (merging the deploy-workflow PR)
+- [x] First automatic deploy succeeds (2026-11-20, after the OIDC immutable-subject fix in #7; confirmed again on the #7 merge, 2026-11-23)
 
-**Exit:** merging a PR to `main` automatically deploys a "hello world" page to the CloudFront URL, with no AWS keys stored in GitHub.
+**Exit:** merging a PR to `main` automatically deploys a "hello world" page to the CloudFront URL, with no AWS keys stored in GitHub. ✅
 
 ### M2: Content Model & Data Layer
 
@@ -106,6 +106,7 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 
 Since one goal (G8) is to learn how an AI coding assistant affects delivery, keep a short note at the end of each milestone:
 
-| Milestone | What the assistant did well                                                                                                                                       | Where it needed correction                                                                                  | Rough time saved/lost |
-| --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------- |
-| M0        | Laying out a clear temmplate for execution of the first steps of the project. Provided options and made sure to ask for feedback before carrying out any changes. | Some additional information from my part was needed to help configure some account and preference settings. | Two hours saved       |
+| Milestone | What the assistant did well                                                                                                                                                                                                                                                                              | Where it needed correction                                                                                  | Rough time saved/lost |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------- |
+| M0        | Laying out a clear temmplate for execution of the first steps of the project. Provided options and made sure to ask for feedback before carrying out any changes.                                                                                                                                        | Some additional information from my part was needed to help configure some account and preference settings. | Two hours saved       |
+| M1        | Simple, efficient and secure way of deploying this first version on AWS. Carefully and systematically configured the AWS account to have a live version of the site up. Very much appreciated the step by step approach, as it gave space to learn from the design and catch any potential overstepping. |                                                                                                             | 5 hours saved         |

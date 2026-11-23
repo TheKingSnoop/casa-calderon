@@ -8,7 +8,7 @@ Guidance for AI coding assistants working in this repository.
 
 ## Current phase
 
-**M1 (Scaffold, Tooling & AWS Hosting) in progress.** App scaffold and tooling are done; the AWS foundation is next. Israel is building solo through M3. Repo: `TheKingSnoop/casa-calderon` (private until M3). Check [docs/04-roadmap.md](docs/04-roadmap.md) for the current milestone before starting work, and [docs/decisions/](docs/decisions/) for accepted decisions.
+**M1 is done** (site live at https://d2ea5d75wlmb93.cloudfront.net, auto-deployed from `main`). **M2 (Content Model & Data Layer) is next.** Israel is building solo through M3. Repo: `TheKingSnoop/casa-calderon` (private until M3). Check [docs/04-roadmap.md](docs/04-roadmap.md) for the current milestone before starting work, and [docs/decisions/](docs/decisions/) for accepted decisions.
 
 ## Working agreements
 
