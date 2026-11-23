@@ -16,6 +16,7 @@ new SiteStack(app, "CasaCalderonSite", {
   // Tag the CloudFormation stack itself (SiteStack also tags every resource).
   tags: config.tags,
   githubRepo: config.githubRepo,
+  githubOidcRepo: config.githubOidcRepo,
   deployBranch: config.deployBranch,
   resourceTags: config.tags,
 });

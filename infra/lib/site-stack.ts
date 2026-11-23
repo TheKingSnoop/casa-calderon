@@ -16,6 +16,8 @@ import type { Construct } from "constructs";
 export interface SiteStackProps extends StackProps {
   /** "owner/repo" allowed to deploy via GitHub OIDC */
   readonly githubRepo: string;
+  /** The repo as written in GitHub's OIDC `sub` claim, e.g. "owner@123/repo@456" */
+  readonly githubOidcRepo: string;
   /** Branch allowed to deploy, e.g. "main" */
   readonly deployBranch: string;
   /** Tags added to every taggable resource */
@@ -159,7 +161,7 @@ export class SiteStack extends Stack {
           StringEquals: {
             "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
             // Only workflows running on this exact repo + branch can assume the role.
-            "token.actions.githubusercontent.com:sub": `repo:${props.githubRepo}:ref:refs/heads/${props.deployBranch}`,
+            "token.actions.githubusercontent.com:sub": `repo:${props.githubOidcRepo}:ref:refs/heads/${props.deployBranch}`,
           },
         },
       ),
