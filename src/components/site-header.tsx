@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site";
+import { NavLink } from "./nav-link";
 
 export function SiteHeader() {
   return (
@@ -11,7 +12,11 @@ export function SiteHeader() {
         <Link href="/" className="text-lg font-semibold tracking-tight">
           {siteConfig.name}
         </Link>
-        {/* Section links (Projects, ...) are added as those pages land in M3. */}
+        <ul className="flex items-center gap-6 text-sm">
+          <li>
+            <NavLink href="/projects/">Projects</NavLink>
+          </li>
+        </ul>
       </nav>
     </header>
   );

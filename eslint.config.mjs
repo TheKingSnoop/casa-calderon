@@ -9,6 +9,16 @@ const eslintConfig = defineConfig([
   // Must come last: turns off ESLint rules that conflict with Prettier,
   // so ESLint checks code quality and Prettier owns formatting.
   prettier,
+  {
+    rules: {
+      // Allow dropping a field via rest destructuring, e.g.
+      // `const { body: _body, ...card } = project` to omit `body`.
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { ignoreRestSiblings: true, argsIgnorePattern: "^_" },
+      ],
+    },
+  },
   globalIgnores([
     ".next/**",
     "out/**",
