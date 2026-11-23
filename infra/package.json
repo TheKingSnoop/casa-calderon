@@ -10,10 +10,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "synth": "cdk synth",
-    "diff": "cdk diff --profile casa-calderon",
+    "whoami": "aws sts get-caller-identity --profile casa-calderon-readonly --query Arn --output text",
+    "diff": "cdk diff --profile casa-calderon-readonly --method=template",
+    "diff:changeset": "cdk diff --profile casa-calderon",
+    "whoami:admin": "aws sts get-caller-identity --profile casa-calderon --query Arn --output text",
     "deploy": "cdk deploy --profile casa-calderon",
-    "bootstrap": "cdk bootstrap aws://804450520614/eu-west-2 --profile casa-calderon",
-    "whoami": "aws sts get-caller-identity --profile casa-calderon --query Arn --output text"
+    "bootstrap": "cdk bootstrap aws://804450520614/eu-west-2 --profile casa-calderon"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.275.0",

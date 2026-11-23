@@ -49,19 +49,45 @@ Every taggable resource gets `project=casa-calderon` for Cost Explorer.
 
 ## Commands
 
-Run from `infra/`. You need Node 26 (`.nvmrc`) and, for anything that talks to AWS, a valid SSO session: `aws sso login --profile casa-calderon`.
+Run from `infra/` (or from the repo root as `npm run infra:<name>`). You need Node 26 (`.nvmrc`) and, for anything that talks to AWS, a valid SSO session. One login covers both profiles below:
 
-| Command             | Talks to AWS?      | What it does                                             |
-| ------------------- | ------------------ | -------------------------------------------------------- |
-| `npm run typecheck` | No                 | TypeScript check                                         |
-| `npm test`          | No                 | CDK assertion tests + CloudFront Function tests          |
-| `npm run synth`     | No                 | Generate the CloudFormation template into `cdk.out/`     |
-| `npm run whoami`    | Read-only          | Show which identity the `casa-calderon` profile is using |
-| `npm run diff`      | Read-only          | Compare the code with what's deployed                    |
-| `npm run bootstrap` | **Yes** (one-time) | Create CDK's helper stack (`CDKToolkit`) in `eu-west-2`  |
-| `npm run deploy`    | **Yes**            | Create/update the `CasaCalderonSite` stack               |
+```bash
+aws sso login --sso-session casa-calderon
+```
 
-The AWS commands always pass `--profile casa-calderon`, so they never fall back to the `[default]` profile.
+### Two AWS profiles (least privilege)
+
+| Profile                  | Identity Center role  | Use it for                                                       |
+| ------------------------ | --------------------- | ---------------------------------------------------------------- |
+| `casa-calderon-readonly` | `ReadOnlyAccess`      | **Default.** Checks: who am I, what's deployed, billing, diffs   |
+| `casa-calderon`          | `AdministratorAccess` | Only for changes: `deploy`, `bootstrap`, and the change-set diff |
+
+The read-only role can't write anything, and it **can't assume CDK's deploy roles**, so CDK can't be used to get around it. Tested: an S3 upload returns `AccessDenied` and an EC2 dry-run returns `UnauthorizedOperation`.
+
+| Command                  | Profile   | Talks to AWS?                  | What it does                                                                            |
+| ------------------------ | --------- | ------------------------------ | --------------------------------------------------------------------------------------- |
+| `npm run typecheck`      | none      | No                             | TypeScript check                                                                        |
+| `npm test`               | none      | No                             | CDK assertion tests + CloudFront Function tests                                         |
+| `npm run synth`          | none      | No                             | Generate the CloudFormation template into `cdk.out/`                                    |
+| `npm run whoami`         | read-only | Read-only                      | Show which identity you're using                                                        |
+| `npm run diff`           | read-only | Read-only                      | Template-only diff: code vs deployed (`--method=template`)                              |
+| `npm run whoami:admin`   | admin     | Read-only                      | Check the admin profile works                                                           |
+| `npm run diff:changeset` | admin     | Creates a temporary change set | Most accurate diff, incl. whether resources would be **replaced**. Use before deploys   |
+| `npm run bootstrap`      | admin     | **Yes** (one-time)             | Create CDK's helper stack (`CDKToolkit`) in `eu-west-2`                                 |
+| `npm run deploy`         | admin     | **Yes**                        | Create/update the `CasaCalderonSite` stack (shows the diff and asks before IAM changes) |
+
+Every AWS command passes an explicit `--profile`, so nothing ever falls back to the `[default]` profile.
+
+## Account baseline (console, not CDK)
+
+Account-wide security settings were set up once in the console. They aren't part of this stack, because they belong to the account, not to the site:
+
+| Setting                              | Where                            | Notes                                                                                                                                                                      |
+| ------------------------------------ | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AWS Budgets: $1/month, alert > $0.01 | Billing → Budgets                | Email on any actual spend                                                                                                                                                  |
+| IAM Identity Center (org instance)   | eu-west-2                        | User `israel`, MFA every sign-in; permission sets `AdministratorAccess` (4h) and `ReadOnlyAccess` (8h)                                                                     |
+| IAM Access Analyzer: external access | IAM → Access analyzer, eu-west-2 | **Free.** Flags anything shared outside the account. 0 findings (2026-11-23). Don't add "unused"/"internal" analyzers: they're **paid**                                    |
+| CDK bootstrap (`CDKToolkit`)         | `npm run bootstrap`              | Its CloudFormation execution role uses `AdministratorAccess` (CDK default). **Deferred:** scope it down before anyone else gets infrastructure-deploy access (see Roadmap) |
 
 ## Files
 

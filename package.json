@@ -22,7 +22,8 @@
     "infra:synth": "npm --prefix infra run synth",
     "infra:whoami": "npm --prefix infra run whoami",
     "infra:diff": "npm --prefix infra run diff",
-    "infra:deploy": "npm --prefix infra run deploy"
+    "infra:deploy": "npm --prefix infra run deploy",
+    "infra:diff:changeset": "npm --prefix infra run diff:changeset"
   },
   "lint-staged": {
     "*.{ts,tsx,js,mjs}": [

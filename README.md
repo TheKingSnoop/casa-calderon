@@ -2,7 +2,7 @@
 
 A shared portfolio website for the Calderon Patiño family. It's part studio page and part family introduction. A collective page shows what we can build together, for prospective clients and collaborators. Each member has their own page showing their skills, experience and projects (professional and personal), and who they are beyond the code.
 
-> **Status:** Milestone 1 finishing: AWS hosting deployed, auto-deploy from `main` being switched on.
+> **Status:** Milestone 1 complete: the site auto-deploys to AWS on every merge to `main`. Next: Milestone 2, Content Model & Data Layer.
 >
 > **Live (preview):** https://d2ea5d75wlmb93.cloudfront.net
 >
