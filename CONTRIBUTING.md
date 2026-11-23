@@ -49,6 +49,9 @@ Everything about you lives in plain Markdown files. You don't need to touch any 
 
 Every file starts as a **draft** (`published: false`). Drafts appear only on your own machine (`npm run dev`), **never on the live site**. When you're happy for your page (or a project) to be public, set `published: true` in your own file, in its own PR. That's your privacy sign-off (NFR-6). Nobody else should publish your page for you.
 
+- **On joint projects**, you're only named once your own page is published. Until then the credit reads "and 1 other".
+- **Your email** (if you add one under `links`) is never written into the page's HTML. Visitors see a "Show email" button, which keeps it away from simple scrapers.
+
 ### Member template
 
 ```markdown
