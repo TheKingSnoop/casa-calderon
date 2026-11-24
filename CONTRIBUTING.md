@@ -126,6 +126,26 @@ What you built and the interesting decisions.
 Results, what you learned, what you'd do next.
 ```
 
+### The home page (`content/collective.md`)
+
+The collective page's text lives in one shared file. It's validated the same way, so a typo fails the build.
+
+```markdown
+---
+tagline: One-line headline (max 120 characters)
+pitch: One or two sentences introducing us (max 300 characters)
+published: false # a FAMILY decision: only when everyone agrees on this text
+services: # "What we offer", at least one
+  - title: Web applications
+    description: Full-stack web apps, from idea to deployed product.
+contact: How to start a conversation with us (optional)
+---
+
+"Our story" in Markdown.
+```
+
+Until it's published, the live site shows "Coming soon". The team, featured and joint-project sections fill themselves from member and project files: set `featured: true` on a project to show it on the home page.
+
 ### Common errors
 
 | Message                                      | Fix                                                                            |

@@ -3,9 +3,11 @@ import * as path from "node:path";
 import matter from "gray-matter";
 import type { z } from "zod";
 import {
+  collectiveFrontmatterSchema,
   memberFrontmatterSchema,
   projectFrontmatterSchema,
   SLUG_PATTERN,
+  type Collective,
   type Member,
   type Project,
 } from "./schema";
@@ -36,6 +38,8 @@ export class ContentError extends Error {
 }
 
 export type Content = {
+  /** content/collective.md, or null if the file doesn't exist yet */
+  collective: Collective | null;
   /** Sorted by `order`, then name */
   members: Member[];
   /** Sorted newest first */
@@ -43,14 +47,29 @@ export type Content = {
 };
 
 /**
- * Reads and validates everything in `<rootDir>/members` and `<rootDir>/projects`.
+ * Reads and validates `<rootDir>/collective.md`, `<rootDir>/members` and `<rootDir>/projects`.
  * Throws a ContentError listing *all* problems if anything is invalid.
  * Drafts are included; visibility is decided by the content store (./index.ts).
  */
 export function loadContent(rootDir: string): Content {
   const issues: ContentIssue[] = [];
   const label = (folder: string, file: string) =>
-    [path.basename(rootDir), folder, file].join("/");
+    [path.basename(rootDir), folder, file].filter(Boolean).join("/");
+
+  let collective: Collective | null = null;
+  const collectivePath = path.join(rootDir, "collective.md");
+  if (existsSync(collectivePath)) {
+    const entry = readMarkdown(
+      collectivePath,
+      label("", "collective.md"),
+      issues,
+    );
+    if (entry) {
+      const parsed = collectiveFrontmatterSchema.safeParse(entry.data);
+      if (parsed.success) collective = { ...parsed.data, story: entry.body };
+      else addZodIssues(issues, entry.file, parsed.error);
+    }
+  }
 
   const members = readCollection(rootDir, "members", issues, label).flatMap(
     ({ slug, file, data, body }) => {
@@ -100,6 +119,7 @@ export function loadContent(rootDir: string): Content {
   if (issues.length > 0) throw new ContentError(issues);
 
   return {
+    collective,
     members: members.sort(
       (a, b) => a.order - b.order || a.name.localeCompare(b.name),
     ),
@@ -141,19 +161,28 @@ function readCollection(
       continue;
     }
 
-    try {
-      const { data, content } = matter(
-        readFileSync(path.join(dir, name), "utf8"),
-      );
-      entries.push({ slug, file, data, body: content.trim() });
-    } catch (error) {
-      issues.push({
-        file,
-        message: `could not read frontmatter (YAML between the --- lines): ${(error as Error).message.split("\n")[0]}`,
-      });
-    }
+    const entry = readMarkdown(path.join(dir, name), file, issues);
+    if (entry) entries.push({ slug, ...entry });
   }
   return entries;
+}
+
+/** Parses one Markdown file; records an issue and returns null on bad YAML. */
+function readMarkdown(
+  fullPath: string,
+  file: string,
+  issues: ContentIssue[],
+): { file: string; data: unknown; body: string } | null {
+  try {
+    const { data, content } = matter(readFileSync(fullPath, "utf8"));
+    return { file, data, body: content.trim() };
+  } catch (error) {
+    issues.push({
+      file,
+      message: `could not read frontmatter (YAML between the --- lines): ${(error as Error).message.split("\n")[0]}`,
+    });
+    return null;
+  }
 }
 
 function addZodIssues(issues: ContentIssue[], file: string, error: z.ZodError) {

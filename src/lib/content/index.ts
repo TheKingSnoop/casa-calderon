@@ -1,9 +1,9 @@
 import * as path from "node:path";
 import { loadContent, type Content } from "./loader";
-import type { Member, Project, ProjectType } from "./schema";
+import type { Collective, Member, Project, ProjectType } from "./schema";
 
 export { ContentError, type ContentIssue } from "./loader";
-export type { Member, Project, ProjectType } from "./schema";
+export type { Collective, Member, Project, ProjectType } from "./schema";
 
 /**
  * The single data layer for pages (see docs/03-architecture.md).
@@ -39,6 +39,12 @@ export function createContentStore(options: {
   return {
     showDrafts: options.showDrafts,
 
+    /** The home page content, or null if missing/unpublished (→ "Coming soon") */
+    getCollective(): Collective | null {
+      const collective = content().collective;
+      return collective && visible(collective) ? collective : null;
+    },
+
     getMembers(): Member[] {
       return content().members.filter(visible);
     },
@@ -67,6 +73,7 @@ const store = createContentStore({
   showDrafts: shouldShowDrafts(),
 });
 
+export const getCollective = () => store.getCollective();
 export const getMembers = () => store.getMembers();
 export const getMember = (slug: string) => store.getMember(slug);
 export const getProjects = (filter?: { member?: string; type?: ProjectType }) =>
