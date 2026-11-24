@@ -17,6 +17,7 @@ Four people on different machines (Windows and possibly Mac) will work on the re
 - **Prettier** for formatting, with **eslint-config-prettier** so the two tools don't conflict.
 - **Husky + lint-staged** pre-commit hook: format and lint the staged files.
 - **Vitest** for unit tests.
+- **Playwright** (Chromium only, added in M3) for end-to-end smoke tests against a drafts build and the real production build, served by a small CloudFront-like server with the production security headers. Firefox/WebKit can be added later.
 - **`.gitattributes`** forcing LF line endings.
 - **GitHub Actions CI** on every PR and push to `main`: format check, lint, type-check, test, build. It has a 15-minute timeout and cancels superseded runs to protect the free Actions minutes.
 

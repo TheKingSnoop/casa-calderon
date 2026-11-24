@@ -93,11 +93,49 @@ jobs:
       - name: Synthesize CloudFormation (cdk synth)
         run: npm run synth -- --quiet
 
+  e2e:
+    name: End-to-end (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+
+      - name: Set up Node (version from .nvmrc)
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies (exactly as locked)
+        run: npm ci
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      # Two builds: drafts (every page) and live (exactly what gets deployed)
+      - name: Build the test sites
+        run: npm run e2e:build
+
+      # Served the way CloudFront serves them, with the production CSP
+      - name: Run end-to-end tests
+        run: npm run e2e
+
+      - name: Upload Playwright report (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
   deploy:
     name: Deploy site to AWS (S3 + CloudFront)
     # Only after a merge to main, and only if every check above passed.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [verify, infra]
+    needs: [verify, infra, e2e]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

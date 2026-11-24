@@ -7,3 +7,6 @@ package-lock.json
 next-env.d.ts
 # Generated and managed by Next.js; keep it byte-identical
 AGENTS.md
+out-e2e/
+playwright-report/
+test-results/

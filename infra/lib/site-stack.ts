@@ -12,6 +12,7 @@ import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as iam from "aws-cdk-lib/aws-iam";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import type { Construct } from "constructs";
+import * as headers from "./security-headers";
 
 export interface SiteStackProps extends StackProps {
   /** "owner/repo" allowed to deploy via GitHub OIDC */
@@ -65,26 +66,14 @@ export class SiteStack extends Stack {
       {
         comment: "Casa Calderon security headers",
         securityHeadersBehavior: {
-          // 'unsafe-inline' for scripts is needed because Next.js static export
-          // inlines small bootstrap scripts and we have no server to add nonces.
+          // Values live in security-headers.ts, shared with the local test
+          // server so end-to-end tests run under the production CSP.
           contentSecurityPolicy: {
-            contentSecurityPolicy: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data:",
-              "font-src 'self'",
-              "connect-src 'self'",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-              "frame-ancestors 'none'",
-              "upgrade-insecure-requests",
-            ].join("; "),
+            contentSecurityPolicy: headers.contentSecurityPolicy,
             override: true,
           },
           strictTransportSecurity: {
-            accessControlMaxAge: Duration.days(365),
+            accessControlMaxAge: Duration.seconds(headers.hstsMaxAgeSeconds),
             includeSubdomains: true,
             override: true,
           },
@@ -103,7 +92,7 @@ export class SiteStack extends Stack {
           customHeaders: [
             {
               header: "Permissions-Policy",
-              value: "camera=(), microphone=(), geolocation=()",
+              value: headers.permissionsPolicy,
               override: true,
             },
           ],

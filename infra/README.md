@@ -42,6 +42,8 @@ Every taggable resource gets `project=casa-calderon` for Cost Explorer.
 
 ### Notes and trade-offs
 
+- **Security header values live in `lib/security-headers.ts`.** The local end-to-end test server (`scripts/serve-static.ts`) imports the same file, so the tests run under the exact production CSP. Change headers there, never inline in the stack.
+- **Redirects keep the query string.** `/projects?member=marcy` → `/projects/?member=marcy` (fixed in M3; earlier versions dropped it).
 - **CSP allows `'unsafe-inline'` scripts.** Next.js static export inlines small bootstrap scripts, and without a server we can't add per-request nonces. Everything else is locked to `'self'`. Revisit if we add hashes at build time.
 - **GitHub uses the _immutable subject_ format for this repo.** The OIDC `sub` claim is `repo:TheKingSnoop@138521589/casa-calderon@1456781007:ref:refs/heads/main` (owner and repo **numeric IDs**), not `repo:TheKingSnoop/casa-calderon:...`. IDs are never reused, so a deleted or renamed repo recreated under the same name can't assume our role. The value lives in `lib/config.ts` (`githubOidcRepo`). If deploys fail with `Not authorized to perform sts:AssumeRoleWithWebIdentity`, compare it with `gh api repos/TheKingSnoop/casa-calderon/actions/oidc/customization/sub`, or look up the failed `AssumeRoleWithWebIdentity` event in CloudTrail (its `userName` is the exact `sub` GitHub sent).
 - **The GitHub OIDC provider is account-wide.** AWS allows only one per URL. Any other project in this account that deploys from GitHub should reference this provider instead of creating its own.

@@ -61,11 +61,36 @@ Windows uses CRLF line endings; Mac/Linux use LF. This file makes the repo alway
 
 Defined in `.github/workflows/ci.yml`. On every PR, GitHub starts a clean Linux machine, installs exactly what's in `package-lock.json` (`npm ci`), and runs every check across the **whole** project. This catches what the hook can't: skipped hooks, problems that only appear when files interact, "works on my machine" issues, and build failures.
 
-CI has two check jobs that run in parallel, plus a deploy job on `main`:
+CI has three check jobs that run in parallel, plus a deploy job on `main`:
 
 - **Format, lint, type-check, test, build:** the website (repo root).
 - **Infra:** the AWS CDK app in `infra/` (type-check, tests, `cdk synth`). It never talks to AWS. See [infra/README.md](../infra/README.md).
-- **Deploy (only on `main`, only if both checks pass):** publishes the site. See below.
+- **End-to-end (Playwright):** real-browser smoke tests (see below).
+- **Deploy (only on `main`, only if all three checks pass):** publishes the site. See below.
+
+### End-to-end tests (Playwright)
+
+Real-browser tests in `tests/e2e/`, run in headless Chromium against **two builds** of the site:
+
+| Project  | Build                           | What it proves                                                                                                                                  |
+| -------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `drafts` | `SHOW_DRAFTS=true` (every page) | Pages render, links and filters work, skip link and keyboard navigation work, unknown pages 404, trailing-slash redirects keep the query string |
+| `live`   | Normal production build         | **Exactly what gets deployed:** "Coming soon", no draft names or placeholder text anywhere, draft pages are 404, security headers present       |
+
+- **Served like CloudFront:** `scripts/serve-static.ts` copies the URL function and sends the **production security headers** (shared with the CDK stack via `infra/lib/security-headers.ts`).
+- **Every test fails on a console error or CSP violation**, so a security policy that would break the live site fails CI first.
+- **When someone publishes their page,** the `live` tests that expect "nothing personal" need updating in the same PR. That's deliberate: publishing should be a conscious change.
+
+Run them locally:
+
+```bash
+npx playwright install chromium   # once per machine (~120 MB)
+npm run e2e:all                   # build both sites, then run the tests
+npm run e2e                       # re-run tests without rebuilding
+npm run e2e:report                # open the HTML report after a failure
+```
+
+If CI fails, download the **playwright-report** artifact from the run: it includes traces you can replay step by step with `npx playwright show-trace`.
 
 ### How a merge becomes a live site
 
@@ -104,6 +129,7 @@ sequenceDiagram
 | `npm run typecheck`     | Generate Next.js route types, then run TypeScript                                                                                                                           |
 | `npm test`              | Run tests once                                                                                                                                                              |
 | `npm run test:watch`    | Re-run tests as you change files                                                                                                                                            |
+| `npm run e2e:all`       | Build both test sites and run the Playwright end-to-end tests (see above)                                                                                                   |
 | `npm run infra:*`       | Infra shortcuts from the repo root: `infra:install`, `infra:check`, `infra:synth`, `infra:whoami`, `infra:diff`, `infra:deploy` (see [infra/README.md](../infra/README.md)) |
 
 **Tip:** run `npm run check` before pushing, and CI will almost never surprise you.
