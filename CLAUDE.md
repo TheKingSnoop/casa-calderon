@@ -45,6 +45,8 @@ Node 26 (`.nvmrc`, managed with fnm). Details: [docs/06-development-workflow.md]
 - `npm run build`: static export to `out/`
 - `npm run check`: format check + lint + type-check + tests + content check (run before opening a PR)
 - `npm run content:check`: validate everything in `content/` (also runs automatically before `npm run build`)
+- `npm run e2e:all`: build the drafts + live test sites and run the Playwright tests (`tests/e2e/`). The `live` tests assert that nothing personal is published; when a member publishes, update them in the same PR, deliberately
+- Security headers (CSP etc.) are defined once in `infra/lib/security-headers.ts` and shared with the e2e test server. Never inline them
 - `npm run format` / `npm run lint` / `npm run typecheck` / `npm test`
 
 ### Infrastructure (`infra/`, a separate npm package)
