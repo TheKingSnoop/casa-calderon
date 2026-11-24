@@ -77,7 +77,7 @@ Decisions (2026-11-23): clean baseline design with tokens in `globals.css` (iden
 - [x] Projects list + filters `/projects/` (FR-20): member + type filters in the URL (`?member=&type=`), full list without JavaScript, result count announced to screen readers; "Projects" in the header nav
 - [x] Collective landing page (FR-1 to FR-7) from `content/collective.md`: hero, "What we offer", team, featured work, "Built together", "Our story", "Work with us" (per-member). "Coming soon" until the family publishes it
 - [x] E2E smoke tests (Playwright, Chromium): 24 tests on a drafts build + the live build, served like CloudFront with the production CSP; deploys wait for them
-- [ ] Deploy the CloudFront URL-function fix (keep the query string on trailing-slash redirects; found while building the test server): `npm run infra:deploy`, with confirmation
+- [x] Deploy the CloudFront URL-function fix (keep the query string on trailing-slash redirects; found while building the test server). Deployed 2026-11-24; verified `/projects?member=marcy` → `/projects/?member=marcy`
 - [ ] Make the repo **public** and enable a branch ruleset on `main` (require PR + passing CI); check no secrets or private info in git history first
 - [ ] **Showcase to siblings**, collect feedback, give them write access to the repo
 
