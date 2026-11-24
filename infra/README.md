@@ -80,6 +80,8 @@ The read-only role can't write anything, and it **can't assume CDK's deploy role
 
 Every AWS command passes an explicit `--profile`, so nothing ever falls back to the `[default]` profile.
 
+**Extra CDK flags** go after `--`, e.g. `npm run deploy -- --progress events`, or from the repo root `npm run infra:deploy -- --progress events`. (Before M3, the root shortcuts lacked a trailing `--`, so the inner `npm` silently swallowed such flags as its own options and **ran nothing**. If a deploy ever prints nothing, check the stack's `LastUpdatedTime` before assuming it worked.)
+
 ## Account baseline (console, not CDK)
 
 Account-wide security settings were set up once in the console. They aren't part of this stack, because they belong to the account, not to the site:
