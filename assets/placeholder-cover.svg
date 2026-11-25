@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1200" viewBox="0 0 2400 1200">
+  <!-- Placeholder cover for the home page hero. Abstract and non-personal:
+       replaced by a real family photo (with everyone's consent) when the
+       home page is published. Processed with `npm run images`.
+       No blur filters: the renderer clips before blurring, which leaves a
+       pale rim at the edges. Soft edges come from fade gradients instead. -->
+  <defs>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3a2e28"/>
+      <stop offset="0.45" stop-color="#6d5140"/>
+      <stop offset="1" stop-color="#8a6a4e"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.82" cy="0.2" r="0.55">
+      <stop offset="0" stop-color="#d3a776" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#d3a776" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="green" cx="0.58" cy="1" r="0.6">
+      <stop offset="0" stop-color="#5f7d6b" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#5f7d6b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hill-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2c3a33" stop-opacity="0"/>
+      <stop offset="0.35" stop-color="#2c3a33" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#2c3a33" stop-opacity="0.6"/>
+    </linearGradient>
+    <linearGradient id="hill-near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1f2622" stop-opacity="0"/>
+      <stop offset="0.4" stop-color="#1f2622" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#1f2622" stop-opacity="0.7"/>
+    </linearGradient>
+  </defs>
+  <rect width="2400" height="1200" fill="url(#base)"/>
+  <rect width="2400" height="1200" fill="url(#sun)"/>
+  <rect width="2400" height="1200" fill="url(#green)"/>
+  <path d="M0 820 C 400 720, 700 780, 1000 720 S 1700 600, 2400 720 L 2400 1200 L 0 1200 Z" fill="url(#hill-far)"/>
+  <path d="M0 940 C 500 860, 900 920, 1300 860 S 2000 820, 2400 880 L 2400 1200 L 0 1200 Z" fill="url(#hill-near)"/>
+</svg>

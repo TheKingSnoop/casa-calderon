@@ -114,6 +114,20 @@ export const collectiveFrontmatterSchema = z.strictObject({
     .min(1, "List at least one service"),
   /** "Work with us" (FR-6): text above the list of members */
   contact: nonEmpty.optional(),
+  /**
+   * Full-width hero photo, prepared with `npm run images`. `src` is the base
+   * path without width/extension, e.g. "/images/site/cover"; the loader checks
+   * the files exist.
+   */
+  cover: z
+    .strictObject({
+      src: z.string().regex(/^\/images\/[a-z0-9-]+\/[a-z0-9-]+$/, {
+        message:
+          'Use the base path printed by `npm run images`, e.g. "/images/site/cover" (no width or extension)',
+      }),
+      alt: nonEmpty.describe("Describe the photo for screen readers"),
+    })
+    .optional(),
   /** Family sign-off: only `true` replaces "Coming soon" on the live site */
   published: z.boolean().default(false),
 });

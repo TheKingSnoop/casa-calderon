@@ -19,6 +19,34 @@ test.describe("home page", () => {
     ]);
   });
 
+  test("shows the cover photo, loaded in a modern format, with alt text", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const cover = page.getByRole("img", { name: /sunset over soft hills/ });
+    await expect(cover).toBeVisible();
+    // Actually decoded (not a broken image), and AVIF/WebP was chosen
+    const { naturalWidth, currentSrc } = await cover.evaluate(
+      (img: HTMLImageElement) => ({
+        naturalWidth: img.naturalWidth,
+        currentSrc: img.currentSrc,
+      }),
+    );
+    expect(naturalWidth).toBeGreaterThan(0);
+    expect(currentSrc).toMatch(/\/images\/site\/cover-\d+\.(avif|webp)$/);
+  });
+
+  test("shows the logo in the header and the hero, hidden from screen readers", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const logos = page.locator("svg[data-logo]");
+    await expect(logos).toHaveCount(2);
+    for (const logo of await logos.all()) {
+      await expect(logo).toHaveAttribute("aria-hidden", "true");
+    }
+  });
+
   test("'Work with us' jumps to the contact section", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("link", { name: "Work with us" }).click();

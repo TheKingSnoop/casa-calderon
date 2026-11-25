@@ -16,6 +16,25 @@ test("home page shows 'Coming soon' until the family publishes it", async ({
   await expect(page.getByText("Coming soon")).toBeVisible();
 });
 
+test("the header shows the logo; the home page doesn't use the cover yet", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator("header svg[data-logo]")).toBeVisible();
+  expect(await page.content()).not.toContain("/images/site/cover");
+});
+
+test("the browser tab icon is the site's own, not the Next.js default", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const href = await page.locator('link[rel="icon"]').getAttribute("href");
+  expect(href).toMatch(/^\/icon\.svg/);
+  const icon = await page.request.get(href!);
+  expect(icon.status()).toBe(200);
+  expect(await icon.text()).toContain("CC");
+});
+
 test("projects page shows the empty state", async ({ page }) => {
   await page.goto("/projects/");
   await expect(page.getByText("No projects published yet.")).toBeVisible();

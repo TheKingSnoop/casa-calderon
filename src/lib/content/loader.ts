@@ -66,8 +66,25 @@ export function loadContent(rootDir: string): Content {
     );
     if (entry) {
       const parsed = collectiveFrontmatterSchema.safeParse(entry.data);
-      if (parsed.success) collective = { ...parsed.data, story: entry.body };
-      else addZodIssues(issues, entry.file, parsed.error);
+      if (parsed.success) {
+        collective = { ...parsed.data, story: entry.body };
+        const cover = parsed.data.cover;
+        if (cover) {
+          // public/ sits next to content/; check every generated size exists.
+          const publicDir = path.join(rootDir, "..", "public");
+          const missing = coverFiles(cover.src).filter(
+            (file) => !existsSync(path.join(publicDir, file)),
+          );
+          if (missing.length > 0) {
+            issues.push({
+              file: entry.file,
+              message: `cover.src: missing ${missing.map((f) => `public${f}`).join(", ")}. Run: npm run images -- <photo> <folder> <name>`,
+            });
+          }
+        }
+      } else {
+        addZodIssues(issues, entry.file, parsed.error);
+      }
     }
   }
 
@@ -125,6 +142,18 @@ export function loadContent(rootDir: string): Content {
     ),
     projects: projects.sort((a, b) => b.date.localeCompare(a.date)),
   };
+}
+
+/**
+ * The files `npm run images` produces for a base path. Must match
+ * IMAGE_WIDTHS / IMAGE_FORMATS in scripts/lib/images.ts.
+ */
+export const COVER_WIDTHS = [640, 1280, 1920] as const;
+export const COVER_FORMATS = ["avif", "webp"] as const;
+export function coverFiles(src: string): string[] {
+  return COVER_WIDTHS.flatMap((w) =>
+    COVER_FORMATS.map((f) => `${src}-${w}.${f}`),
+  );
 }
 
 type RawEntry = { slug: string; file: string; data: unknown; body: string };

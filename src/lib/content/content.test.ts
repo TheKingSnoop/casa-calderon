@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import * as path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { createContentStore, shouldShowDrafts } from "./index";
-import { ContentError, loadContent } from "./loader";
+import { ContentError, coverFiles, loadContent } from "./loader";
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -325,6 +325,50 @@ describe("collective.md", () => {
       ),
       expect.stringContaining('Unrecognized key: "slogan"'),
     ]);
+  });
+
+  it("accepts a cover photo whose generated files exist", () => {
+    const rootDir = makeContent({
+      "collective.md": collective.replace(
+        "tagline:",
+        "cover:\n  src: /images/site/cover\n  alt: A sunset\ntagline:",
+      ),
+    });
+    // public/ next to content/, with every size `npm run images` writes
+    for (const file of coverFiles("/images/site/cover")) {
+      const full = path.join(rootDir, "..", "public", file);
+      mkdirSync(path.dirname(full), { recursive: true });
+      writeFileSync(full, "");
+    }
+    expect(loadContent(rootDir).collective?.cover).toEqual({
+      src: "/images/site/cover",
+      alt: "A sunset",
+    });
+  });
+
+  it("reports a cover photo whose files are missing, with the fix", () => {
+    const errors = errorsFor({
+      "collective.md": collective.replace(
+        "tagline:",
+        "cover:\n  src: /images/site/nope\n  alt: A sunset\ntagline:",
+      ),
+    });
+    expect(errors).toEqual([
+      expect.stringMatching(
+        /cover\.src: missing public\/images\/site\/nope-640\.avif.*Run: npm run images/,
+      ),
+    ]);
+  });
+
+  it("rejects a cover path with a width or extension, and a missing alt", () => {
+    const errors = errorsFor({
+      "collective.md": collective.replace(
+        "tagline:",
+        'cover:\n  src: /images/site/cover-1920.webp\n  alt: ""\ntagline:',
+      ),
+    });
+    expect(errors.join("\n")).toMatch(/cover\.src: Use the base path/);
+    expect(errors.join("\n")).toMatch(/cover\.alt: Must not be empty/);
   });
 
   it("is hidden until published (unless drafts are shown)", () => {
