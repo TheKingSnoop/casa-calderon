@@ -14,7 +14,7 @@ export function SiteHeader() {
           href="/"
           className="flex items-center gap-2.5 text-lg font-semibold tracking-tight"
         >
-          <Logo size={30} />
+          <Logo size={40} />
           {siteConfig.name}
         </Link>
         <ul className="flex items-center gap-6 text-sm">

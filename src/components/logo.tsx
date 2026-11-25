@@ -1,50 +1,96 @@
 /**
- * Casa Calderon logo. PLACEHOLDER: a "CC" monogram in a circle.
+ * Casa Calderon logo: the geometric dog badge.
+ * Source of truth (unchanged original): assets/logo/logo-badge.svg
  *
- * To use a real logo, replace the <svg> below (keep `viewBox`, `aria-hidden`
- * and `currentColor` so it follows the text colour in light/dark mode and on
- * the cover photo), and update src/app/icon.svg (the browser tab icon) to match.
+ * Differences from the original file, for use on the site:
+ * - viewBox "0 4 200 200": square and centred on the circle (the original
+ *   is 200×208, which left the badge slightly off-centre in a square box).
+ * - Lines keep a fixed pixel width at any size (`non-scaling-stroke`), so
+ *   the detail stays visible at 40px in the header instead of fading to
+ *   ~0.25px lines.
+ * - Colour follows the surrounding text (`currentColor`), so it works in
+ *   light mode, dark mode and on the cover photo. The eye highlights use
+ *   `highlight` (default: the page background).
+ *
+ * The browser tab icon (src/app/icon.svg) is a simplified small-size
+ * variant of the same dog; update both together if the logo changes.
  *
  * Decorative: it always sits next to the site name, so screen readers skip it.
  */
 export function Logo({
-  size = 32,
+  size = 40,
   className,
+  highlight = "var(--background)",
 }: {
   size?: number;
   className?: string;
+  /** Colour of the eye highlights, usually whatever is behind the logo */
+  highlight?: string;
 }) {
+  // Thin lines read as detail when large; a little heavier when small.
+  const stroke = size >= 100 ? 1.75 : size >= 48 ? 1.35 : 1.15;
   return (
     <svg
-      viewBox="0 0 48 48"
+      viewBox="0 4 200 200"
       width={size}
       height={size}
       aria-hidden="true"
       focusable="false"
-      className={className}
-      data-logo="placeholder"
+      className={`${className ?? ""} [&_*]:[vector-effect:non-scaling-stroke]`}
+      data-logo="dog-badge"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={stroke}
+      strokeLinejoin="round"
+      strokeLinecap="round"
     >
-      <circle
-        cx="24"
-        cy="24"
-        r="22.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-      <text
-        x="24"
-        y="24"
-        textAnchor="middle"
-        dominantBaseline="central"
-        fill="currentColor"
-        fontFamily="var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif"
-        fontSize="17"
-        fontWeight="600"
-        letterSpacing="-0.5"
-      >
-        CC
-      </text>
+      <circle cx="100" cy="104" r="94" />
+      <g transform="translate(100 104) scale(0.78) translate(-100 -107)">
+        <polygon points="100,18 110,31 126,26 142,33 160,34 174,50 164,78 150,60 153,86 165,101 151,108 159,127 145,133 149,154 134,158 137,174 123,166 119,150 81,150 77,166 63,174 66,158 51,154 55,133 41,127 49,108 35,101 47,86 50,60 36,78 26,50 40,34 58,33 74,26 90,31" />
+        <polyline points="119,150 121,180 113,194 100,198 87,194 79,180 81,150" />
+        <line x1="100" y1="158" x2="100" y2="180" />
+        {/* right side of the face */}
+        <line x1="110" y1="31" x2="100" y2="42" />
+        <line x1="100" y1="42" x2="105" y2="63" />
+        <line x1="126" y1="26" x2="133" y2="50" />
+        <line x1="142" y1="33" x2="150" y2="60" />
+        <line x1="150" y1="60" x2="140" y2="63" />
+        <line x1="135" y1="75" x2="153" y2="86" />
+        <line x1="110" y1="76" x2="116" y2="96" />
+        <line x1="135" y1="75" x2="124" y2="108" />
+        <line x1="124" y1="108" x2="151" y2="108" />
+        <line x1="124" y1="108" x2="145" y2="133" />
+        <line x1="145" y1="133" x2="119" y2="150" />
+        <line x1="134" y1="158" x2="119" y2="150" />
+        <polyline points="105,63 113,53 121,60 133,50 140,63" />
+        <polygon points="110,76 121,68 135,75 121,82" fill="currentColor" />
+        <polygon points="119,72 124,70 121,75" fill={highlight} stroke="none" />
+        <line x1="100" y1="136" x2="119" y2="150" />
+        {/* left side of the face */}
+        <line x1="90" y1="31" x2="100" y2="42" />
+        <line x1="100" y1="42" x2="95" y2="63" />
+        <line x1="74" y1="26" x2="67" y2="50" />
+        <line x1="58" y1="33" x2="50" y2="60" />
+        <line x1="50" y1="60" x2="60" y2="63" />
+        <line x1="65" y1="75" x2="47" y2="86" />
+        <line x1="90" y1="76" x2="84" y2="96" />
+        <line x1="65" y1="75" x2="76" y2="108" />
+        <line x1="76" y1="108" x2="49" y2="108" />
+        <line x1="76" y1="108" x2="55" y2="133" />
+        <line x1="55" y1="133" x2="81" y2="150" />
+        <line x1="66" y1="158" x2="81" y2="150" />
+        <polyline points="95,63 87,53 79,60 67,50 60,63" />
+        <polygon points="90,76 79,68 65,75 79,82" fill="currentColor" />
+        <polygon points="81,72 76,70 79,75" fill={highlight} stroke="none" />
+        <line x1="100" y1="136" x2="81" y2="150" />
+        {/* centre line and nose */}
+        <line x1="100" y1="18" x2="100" y2="42" />
+        <line x1="100" y1="123" x2="100" y2="136" />
+        <polygon
+          points="84,96 116,96 124,108 112,123 88,123 76,108"
+          fill="currentColor"
+        />
+      </g>
     </svg>
   );
 }

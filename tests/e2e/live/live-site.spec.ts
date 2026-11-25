@@ -32,7 +32,7 @@ test("the browser tab icon is the site's own, not the Next.js default", async ({
   expect(href).toMatch(/^\/icon\.svg/);
   const icon = await page.request.get(href!);
   expect(icon.status()).toBe(200);
-  expect(await icon.text()).toContain("CC");
+  expect(await icon.text()).toContain("Casa Calderon browser tab icon");
 });
 
 test("projects page shows the empty state", async ({ page }) => {

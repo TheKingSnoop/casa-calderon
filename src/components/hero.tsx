@@ -57,8 +57,10 @@ export function Hero({ collective }: { collective: Collective }) {
       >
         <DraftBadge published={collective.published} />
         <Logo
-          size={56}
+          size={72}
           className={onPhoto ? "text-white" : "text-foreground"}
+          // On the photo the logo is white, so its eye highlights go dark.
+          highlight={onPhoto ? "#111111" : undefined}
         />
         <h1
           id="hero-title"
