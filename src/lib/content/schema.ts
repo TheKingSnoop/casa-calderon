@@ -103,6 +103,12 @@ export type Member = MemberFrontmatter & {
 
 // ── Collective (content/collective.md: the home page) ───────────────────────
 
+/** Base path of an image made by `npm run images` (no width or extension) */
+const imageBasePath = z.string().regex(/^\/images\/[a-z0-9-]+\/[a-z0-9-]+$/, {
+  message:
+    'Use the base path printed by `npm run images`, e.g. "/images/site/cover" (no width or extension)',
+});
+
 export const collectiveFrontmatterSchema = z.strictObject({
   /** Hero headline under the site name */
   tagline: nonEmpty.max(120, "Keep the tagline to 120 characters or fewer"),
@@ -121,10 +127,9 @@ export const collectiveFrontmatterSchema = z.strictObject({
    */
   cover: z
     .strictObject({
-      src: z.string().regex(/^\/images\/[a-z0-9-]+\/[a-z0-9-]+$/, {
-        message:
-          'Use the base path printed by `npm run images`, e.g. "/images/site/cover" (no width or extension)',
-      }),
+      src: imageBasePath,
+      /** Optional dark-mode version, shown to visitors using dark mode */
+      srcDark: imageBasePath.optional(),
       alt: nonEmpty.describe("Describe the photo for screen readers"),
     })
     .optional(),

@@ -360,6 +360,31 @@ describe("collective.md", () => {
     ]);
   });
 
+  it("checks the dark-mode cover's files too", () => {
+    const rootDir = makeContent({
+      "collective.md": collective.replace(
+        "tagline:",
+        "cover:\n  src: /images/site/day\n  srcDark: /images/site/night\n  alt: Hills\ntagline:",
+      ),
+    });
+    for (const file of coverFiles("/images/site/day")) {
+      const full = path.join(rootDir, "..", "public", file);
+      mkdirSync(path.dirname(full), { recursive: true });
+      writeFileSync(full, "");
+    }
+    try {
+      loadContent(rootDir);
+      throw new Error("expected a ContentError");
+    } catch (error) {
+      const messages = (error as ContentError).issues.map((i) => i.message);
+      expect(messages).toEqual([
+        expect.stringMatching(
+          /^cover\.srcDark: missing public\/images\/site\/night-640\.avif/,
+        ),
+      ]);
+    }
+  });
+
   it("rejects a cover path with a width or extension, and a missing alt", () => {
     const errors = errorsFor({
       "collective.md": collective.replace(

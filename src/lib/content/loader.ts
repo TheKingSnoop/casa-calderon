@@ -72,14 +72,21 @@ export function loadContent(rootDir: string): Content {
         if (cover) {
           // public/ sits next to content/; check every generated size exists.
           const publicDir = path.join(rootDir, "..", "public");
-          const missing = coverFiles(cover.src).filter(
-            (file) => !existsSync(path.join(publicDir, file)),
-          );
-          if (missing.length > 0) {
-            issues.push({
-              file: entry.file,
-              message: `cover.src: missing ${missing.map((f) => `public${f}`).join(", ")}. Run: npm run images -- <photo> <folder> <name>`,
-            });
+          const variants = [
+            ["src", cover.src],
+            ["srcDark", cover.srcDark],
+          ] as const;
+          for (const [field, src] of variants) {
+            if (!src) continue;
+            const missing = coverFiles(src).filter(
+              (file) => !existsSync(path.join(publicDir, file)),
+            );
+            if (missing.length > 0) {
+              issues.push({
+                file: entry.file,
+                message: `cover.${field}: missing ${missing.map((f) => `public${f}`).join(", ")}. Run: npm run images -- <photo> <folder> <name>`,
+              });
+            }
           }
         }
       } else {

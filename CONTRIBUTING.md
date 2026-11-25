@@ -140,7 +140,8 @@ services: # "What we offer", at least one
     description: Full-stack web apps, from idea to deployed product.
 contact: How to start a conversation with us (optional)
 cover: # optional full-width hero photo, made with `npm run images`
-  src: /images/site/cover # base path: no width or extension
+  src: /images/site/mountains-dawn # base path: no width or extension
+  srcDark: /images/site/mountains-night # optional: shown in dark mode
   alt: Describe the photo for screen readers
 ---
 

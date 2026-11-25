@@ -21,7 +21,7 @@ test("the header shows the logo; the home page doesn't use the cover yet", async
 }) => {
   await page.goto("/");
   await expect(page.locator("header svg[data-logo]")).toBeVisible();
-  expect(await page.content()).not.toContain("/images/site/cover");
+  expect(await page.content()).not.toContain("/images/site/");
 });
 
 test("the browser tab icon is the site's own, not the Next.js default", async ({
