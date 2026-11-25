@@ -4,10 +4,44 @@ import { siteConfig } from "@/lib/site";
 import { DraftBadge } from "./badges";
 import { Logo } from "./logo";
 
+/**
+ * Logo above the site name in the hero. Off for now (Israel: cleaner
+ * without it); set to true to bring it back. The header logo is unaffected.
+ */
+const SHOW_HERO_LOGO = false;
+
 const WIDTHS = [640, 1280, 1920];
 const srcSet = (src: string, format: "avif" | "webp") =>
   WIDTHS.map((w) => `${src}-${w}.${format} ${w}w`).join(", ");
-const DARK = "(prefers-color-scheme: dark)";
+
+/**
+ * One cover image as <picture>: AVIF with a WebP fallback, in the widths
+ * `npm run images` produces. Static export has no image optimiser, so the
+ * browser picks the format and width itself.
+ */
+function CoverPicture({
+  src,
+  alt,
+  className,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <picture className={className}>
+      <source type="image/avif" srcSet={srcSet(src, "avif")} sizes="100vw" />
+      <img
+        src={`${src}-1280.webp`}
+        srcSet={srcSet(src, "webp")}
+        sizes="100vw"
+        alt={alt}
+        fetchPriority="high"
+        className="absolute inset-0 -z-10 h-full w-full object-cover"
+      />
+    </picture>
+  );
+}
 
 /**
  * Home page hero (FR-1), from content/collective.md:
@@ -58,41 +92,27 @@ export function Hero({ collective }: { collective: Collective }) {
     >
       {cover && (
         <>
-          {/* Static export: no image optimiser. `npm run images` pre-builds
-              every size; the browser picks the format, width and (for a
-              themed cover) the light/dark version. The first matching
-              <source> wins, so dark comes first. */}
-          <picture>
-            {cover.srcDark && (
-              <>
-                <source
-                  media={DARK}
-                  type="image/avif"
-                  srcSet={srcSet(cover.srcDark, "avif")}
-                  sizes="100vw"
-                />
-                <source
-                  media={DARK}
-                  type="image/webp"
-                  srcSet={srcSet(cover.srcDark, "webp")}
-                  sizes="100vw"
-                />
-              </>
-            )}
-            <source
-              type="image/avif"
-              srcSet={srcSet(cover.src, "avif")}
-              sizes="100vw"
-            />
-            <img
-              src={`${cover.src}-1280.webp`}
-              srcSet={srcSet(cover.src, "webp")}
-              sizes="100vw"
-              alt={cover.alt}
-              fetchPriority="high"
-              className="absolute inset-0 -z-10 h-full w-full object-cover"
-            />
-          </picture>
+          {/* A themed cover renders both versions and CSS shows the one
+              for the current theme (OS setting or the header toggle). A
+              <picture media="(prefers-color-scheme: dark)"> can't follow the
+              toggle. Cost: both images download, ~10-20 KB extra at these sizes.
+              display:none also hides the other version from screen readers. */}
+          {cover.srcDark ? (
+            <>
+              <CoverPicture
+                src={cover.src}
+                alt={cover.alt}
+                className="only-light"
+              />
+              <CoverPicture
+                src={cover.srcDark}
+                alt={cover.alt}
+                className="only-dark"
+              />
+            </>
+          ) : (
+            <CoverPicture src={cover.src} alt={cover.alt} />
+          )}
           {/* Scrim: even on phones (text spans the width), fading to the
               right on wider screens where the text sits on the left. */}
           <div
@@ -106,13 +126,15 @@ export function Hero({ collective }: { collective: Collective }) {
         className={`mx-auto flex max-w-5xl flex-col items-start gap-6 px-6 ${styles.inner}`}
       >
         <DraftBadge published={collective.published} />
-        <Logo
-          size={72}
-          className={style === "photo" ? "text-white" : "text-foreground"}
-          // White logo on a dark photo: its eye highlights go dark. Otherwise
-          // the default (page background) matches whatever is behind it.
-          highlight={style === "photo" ? "#111111" : undefined}
-        />
+        {SHOW_HERO_LOGO && (
+          <Logo
+            size={72}
+            className={style === "photo" ? "text-white" : "text-foreground"}
+            // White logo on a dark photo: its eye highlights go dark. Otherwise
+            // the default (page background) matches whatever is behind it.
+            highlight={style === "photo" ? "#111111" : undefined}
+          />
+        )}
         <h1
           id="hero-title"
           className="text-4xl font-semibold tracking-tight sm:text-6xl"

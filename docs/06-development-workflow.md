@@ -144,6 +144,10 @@ If `package-lock.json` shows up as modified and you didn't change any packages, 
 
 ## Troubleshooting
 
+**"My CSS change doesn't show up in `npm run build` / the e2e tests."** Turbopack's build cache in `.next/` can serve a stale stylesheet. Delete `.next/` and build again. `npm run e2e:build` does this automatically. Stop your `npm run dev` first: deleting `.next/` under a running dev server makes it recompile, or show errors until you restart it.
+
+**"Another next dev server is already running."** Next.js 16 allows one dev server per project. Use the existing one (the message shows its URL), or stop it first.
+
 **"My commit was blocked."** Read the output: it names the file, line and rule. Fix it, `git add` the file again, and commit again. Formatting issues are fixed automatically; only real code problems block you.
 
 **"I need to commit right now and the hook is in the way."** `git commit --no-verify` skips the hook. CI will still catch the problem, so use this only in emergencies.

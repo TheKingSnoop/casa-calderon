@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { THEME_INIT_SCRIPT } from "@/components/theme-toggle";
 import { pageTitle, siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -22,10 +23,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // suppressHydrationWarning: the inline script below may add data-theme
+    // to <html> before React hydrates; React should keep it.
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Applies a saved light/dark choice before the first paint, so
+            there's no flash of the wrong theme (allowed by our CSP's
+            script-src 'unsafe-inline'). */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col font-sans">
         {/* First focusable element: lets keyboard users jump past the header (WCAG 2.4.1) */}
         <a

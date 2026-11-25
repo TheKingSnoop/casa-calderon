@@ -2,6 +2,7 @@ import Link from "next/link";
 import { siteConfig } from "@/lib/site";
 import { Logo } from "./logo";
 import { NavLink } from "./nav-link";
+import { ThemeToggle } from "./theme-toggle";
 
 export function SiteHeader() {
   return (
@@ -17,11 +18,14 @@ export function SiteHeader() {
           <Logo size={40} />
           {siteConfig.name}
         </Link>
-        <ul className="flex items-center gap-6 text-sm">
-          <li>
-            <NavLink href="/projects/">Projects</NavLink>
-          </li>
-        </ul>
+        <div className="flex items-center gap-4">
+          <ul className="flex items-center gap-6 text-sm">
+            <li>
+              <NavLink href="/projects/">Projects</NavLink>
+            </li>
+          </ul>
+          <ThemeToggle />
+        </div>
       </nav>
     </header>
   );

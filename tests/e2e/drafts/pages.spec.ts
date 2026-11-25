@@ -45,15 +45,17 @@ test.describe("home page", () => {
     });
   }
 
-  test("shows the logo in the header and the hero, hidden from screen readers", async ({
+  test("shows the logo in the header only (hero logo switched off), hidden from screen readers", async ({
     page,
   }) => {
     await page.goto("/");
+    // SHOW_HERO_LOGO = false in src/components/hero.tsx
     const logos = page.locator("svg[data-logo]");
-    await expect(logos).toHaveCount(2);
-    for (const logo of await logos.all()) {
-      await expect(logo).toHaveAttribute("aria-hidden", "true");
-    }
+    await expect(logos).toHaveCount(1);
+    await expect(page.locator("header svg[data-logo]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
   });
 
   test("'Work with us' jumps to the contact section", async ({ page }) => {

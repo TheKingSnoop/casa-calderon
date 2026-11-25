@@ -48,6 +48,8 @@ Node 26 (`.nvmrc`, managed with fnm). Details: [docs/06-development-workflow.md]
 - `npm run content:check`: validate everything in `content/` (also runs automatically before `npm run build`)
 - `npm run e2e:all`: build the drafts + live test sites and run the Playwright tests (`tests/e2e/`). The `live` tests assert that nothing personal is published; when a member publishes, update them in the same PR, deliberately
 - Security headers (CSP etc.) are defined once in `infra/lib/security-headers.ts` and shared with the e2e test server. Never inline them
+- **Colours/theme:** palettes are defined once in `src/app/globals.css` (`--light-*`, `--dark-*`); the theme follows the OS unless the header toggle set `<html data-theme>`. Never use Tailwind's `dark:` variant (it only follows the OS, not the toggle). Use the tokens, or the `only-light` / `only-dark` classes
+- **Don't delete `.next/` while the user's `npm run dev` may be running** (check first). Next.js 16 allows one dev server per project; use theirs on :3000 for read-only checks
 - `npm run format` / `npm run lint` / `npm run typecheck` / `npm test`
 
 ### Infrastructure (`infra/`, a separate npm package)
