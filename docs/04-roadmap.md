@@ -10,6 +10,7 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 | M1        | Scaffold, Tooling & AWS Hosting | Israel | ✅ Done        |
 | M2        | Content Model & Data Layer      | Israel | ✅ Done        |
 | M3        | Core Pages + sibling showcase   | Israel | 🟡 Next        |
+| M3.5      | Member hub pilot (Israel)       | Israel | 🟡 In progress |
 | M4        | Design, Accessibility & SEO     | Family | ⚪ Not started |
 | M5        | Content Collection & Launch     | Family | ⚪ Not started |
 | M6+       | Post-launch Enhancements        | Family | ⚪ Backlog     |
@@ -85,6 +86,18 @@ Decisions (2026-11-23): clean baseline design with tokens in `globals.css` (iden
 
 **Exit:** all _Must_ requirements work with placeholder content; siblings onboarded via CONTRIBUTING.md.
 
+### M3.5: Member hub pilot (Israel)
+
+Before going public and the showcase, Israel's page becomes a "hub" showing what a member page can be ([ADR-0006](decisions/0006-member-hubs-and-spaces.md), FR-40 to FR-47). One space per PR. The last two M3 items (go public, showcase) follow this milestone.
+
+- [x] Creative CV from Israel's CV (timeline, education, languages, certifications) + "Download CV" / "View PDF" buttons with a placeholder PDF (live e2e test keeps it a placeholder until Israel publishes)
+- [ ] Kitchen space + tab bar (recipes, servings scaler, recipe structured data)
+- [ ] Photos space ("photo of the week")
+- [ ] Training space (routine + build-time charts from sample data)
+- [ ] Family album: locked placeholder only
+
+**Exit:** the hub works with placeholder content where real content isn't ready; nothing personal on the live site until Israel publishes.
+
 ### M4: Design, Accessibility & SEO
 
 - [ ] Before giving siblings AWS access: give them their own permission sets (read-only by default, **never admin by default**), and do the deferred bootstrap hardening from M1 if any of them will deploy infrastructure
@@ -114,7 +127,10 @@ Decisions (2026-11-23): clean baseline design with tokens in `globals.css` (iden
 - PR preview environments on AWS
 - CloudWatch monitoring & alarms
 - Optional Dev Container (`.devcontainer/`) for a one-click dev environment, also usable with GitHub Codespaces (Codespaces on org repos bills the org; keep the spending limit at $0). See ADR-0004.
-- Spanish translation, blog, case-study templates, testimonials
+- English / Spanish / French versions of every page (FR-47); until then, visitors use their browser's translation
+- Private family album with real access control (e.g. Cognito + CloudFront signed cookies on a private bucket; needs an ADR)
+- Hub spaces that need writes: photo uploads from a phone, logging workouts
+- Blog, case-study templates, testimonials
 
 ---
 

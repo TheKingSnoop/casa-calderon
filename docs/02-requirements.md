@@ -30,6 +30,19 @@ Priority uses **MoSCoW**: **M**ust / **S**hould / **C**ould / **W**on't (this re
 | FR-17 | Certifications with optional verification links (e.g. AWS Credly badges)                              | S                       |
 | FR-18 | Support non-developer members (e.g. parents): skills/projects optional, personal sections still shown | W (model must allow it) |
 
+### Member hub (pilot: Israel, [ADR-0006](decisions/0006-member-hubs-and-spaces.md))
+
+| ID    | Requirement                                                                                                            | Priority |
+| ----- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
+| FR-40 | Creative CV on the member page: experience timeline with location and highlights, education, languages, certifications | S        |
+| FR-41 | "Download CV" and "View PDF" buttons for an ATS-friendly PDF the member uploads; a placeholder until they publish      | S        |
+| FR-42 | Spaces as separate pages with a tab bar (`/members/<slug>/<space>/`), switched on per member in content                | S        |
+| FR-43 | Kitchen: recipes (own and family), with a servings scaler and recipe structured data                                   | C        |
+| FR-44 | Photos: a "photo of the week" series (metadata stripped, settings typed by hand)                                       | C        |
+| FR-45 | Training: routine and progress charts, drawn at build time from a log in content                                       | C        |
+| FR-46 | Family album: locked placeholder only; real access control later (no photos of the child in the repo or bucket)        | C        |
+| FR-47 | English, Spanish and French versions of each page                                                                      | W        |
+
 ### Projects
 
 | ID    | Requirement                                                                          | Priority |

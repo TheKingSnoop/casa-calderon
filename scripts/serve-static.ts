@@ -46,6 +46,7 @@ const CONTENT_TYPES: Record<string, string> = {
   ".avif": "image/avif",
   ".ico": "image/x-icon",
   ".woff2": "font/woff2",
+  ".pdf": "application/pdf",
 };
 
 /** Resolves a URL path to a file inside `root`, or null (also blocks ../ escapes). */

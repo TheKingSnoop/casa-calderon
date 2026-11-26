@@ -22,8 +22,12 @@ export function formatMonth(isoDate: string): string {
   return `${MONTHS[month - 1]} ${year}`;
 }
 
-/** ("2024-09", undefined) → "Sep 2024 – Present" */
-export function formatPeriod(start: string, end?: string): string {
+/**
+ * ("2024-09", undefined) → "Sep 2024 – Present"
+ * (undefined, "2015-07") → "Jul 2015" (a single date, e.g. a graduation)
+ */
+export function formatPeriod(start?: string, end?: string): string {
+  if (!start) return end ? formatMonth(end) : "";
   return `${formatMonth(start)} – ${end ? formatMonth(end) : "Present"}`;
 }
 
