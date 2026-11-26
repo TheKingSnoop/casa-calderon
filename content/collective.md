@@ -2,7 +2,7 @@
 # The home page. Publishing it is a family decision: set published: true
 # only when everyone has agreed on this text (NFR-6).
 tagline: "A family of software developers building web apps, APIs and cloud solutions together."
-pitch: "Four siblings. Bolivian roots, London upbringing, and a shared habit of building things. Here's what we've made, what we're into and who we are, as a family. DRAFT"
+pitch: "Four siblings. Bolivian roots, London upbringing, and a shared habit of building things. Here's what we've made, what we're into and who we are. DRAFT"
 published: false
 services:
   - title: Web applications
