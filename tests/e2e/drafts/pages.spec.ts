@@ -109,6 +109,22 @@ test.describe("member pages", () => {
     expect(response?.status()).toBe(404);
   });
 
+  test("Israel's photo replaces his initials on his page and the home page", async ({
+    page,
+  }) => {
+    for (const path of ["/members/israel/", "/"]) {
+      await page.goto(path);
+      const avatar = page.locator('img[src="/images/israel/avatar-640.webp"]');
+      await expect(avatar).toBeVisible();
+      expect(
+        await avatar.evaluate((img: HTMLImageElement) => img.naturalWidth),
+      ).toBeGreaterThan(0);
+    }
+    // Members without a photo still show initials
+    await page.goto("/members/marcy/");
+    await expect(page.getByText("MC", { exact: true })).toBeVisible();
+  });
+
   test("show an empty state when there are no projects", async ({ page }) => {
     await page.goto("/members/benjamin/");
     await expect(
