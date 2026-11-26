@@ -38,7 +38,7 @@ export function MemberTabs({
       aria-label={`${firstName}'s spaces`}
       className="mt-8 overflow-x-auto border-b border-border"
     >
-      <ul className="flex gap-3.5 sm:gap-6">
+      <ul className="flex gap-3 sm:gap-6">
         {tabs.map((tab) => {
           const isCurrent = tab.id === current;
           return (

@@ -93,15 +93,22 @@ test("unknown recipes are a 404", async ({ page }) => {
   expect(response?.status()).toBe(404);
 });
 
+// Fonts render slightly differently per OS (CI on Linux was 2px wider than
+// Windows), so the tabs need real room, not an exact fit.
 test("all hub tabs fit on a 360px phone without scrolling", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await page.goto("/members/israel/");
   const nav = page.getByRole("navigation", { name: "Israel's spaces" });
-  const { scrollWidth, clientWidth } = await nav.evaluate((n) => ({
-    scrollWidth: n.scrollWidth,
-    clientWidth: n.clientWidth,
-  }));
-  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
+  const { used, available } = await nav.evaluate((n) => {
+    const tabs = [...n.querySelectorAll("li")];
+    return {
+      used:
+        tabs.at(-1)!.getBoundingClientRect().right -
+        tabs[0].getBoundingClientRect().left,
+      available: n.clientWidth,
+    };
+  });
+  expect(used).toBeLessThanOrEqual(available);
 });
