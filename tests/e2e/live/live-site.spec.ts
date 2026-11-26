@@ -54,6 +54,8 @@ for (const path of [
   "/members/israel/",
   "/members/israel/kitchen/",
   "/members/israel/kitchen/korean-meatballs/",
+  "/members/israel/photos/",
+  "/members/israel/training/",
   "/projects/casa-calderon-website/",
 ]) {
   test(`draft page ${path} doesn't exist on the live site`, async ({

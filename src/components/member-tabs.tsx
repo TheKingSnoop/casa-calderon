@@ -3,6 +3,8 @@ import type { Member, Space } from "@/lib/content";
 
 const SPACE_LABELS: Record<Space, string> = {
   kitchen: "Kitchen",
+  photos: "Photos",
+  training: "Training",
 };
 
 /**
