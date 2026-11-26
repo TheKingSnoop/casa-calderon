@@ -18,7 +18,7 @@ photos:
 - Dry seasoning:
   - Salt
   - White pepper
-  - Garlic
+  - Garlic powder
   - Onion (or finely diced fresh onion, if you have time)
   - Chinese five spice
   - Breadcrumbs
