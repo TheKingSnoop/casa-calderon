@@ -92,9 +92,9 @@ Before going public and the showcase, Israel's page becomes a "hub" showing what
 
 - [x] Creative CV from Israel's CV (timeline, education, languages, certifications) + "Download CV" / "View PDF" buttons with a placeholder PDF (live e2e test keeps it a placeholder until Israel publishes)
 - [x] Kitchen space + tab bar: recipe cards from Markdown files (ingredients, method, photos, date), first recipe from Israel's notes. Kept simple on purpose: tags, a servings scaler and recipe structured data wait for a larger catalogue
-- [ ] Photos space ("photo of the week")
-- [ ] Training space (routine + build-time charts from sample data)
-- [ ] Family album: locked placeholder only
+- [x] Photos space: tab + "coming soon" page (2026-11-26). Content (a "photo of the week" series) later
+- [x] Training space: tab + "coming soon" page (2026-11-26). Content (routine + build-time charts) later
+- [ ] Family album: locked placeholder only (deferred; not needed for the showcase)
 
 **Exit:** the hub works with placeholder content where real content isn't ready; nothing personal on the live site until Israel publishes.
 

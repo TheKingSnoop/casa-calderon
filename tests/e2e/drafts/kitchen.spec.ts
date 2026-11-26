@@ -7,7 +7,12 @@ test("the profile has tabs, and Kitchen opens the recipe list", async ({
 }) => {
   await page.goto("/members/israel/");
   const tabs = page.getByRole("navigation", { name: "Israel's spaces" });
-  await expect(tabs.getByRole("link")).toHaveText(["Profile", "Kitchen"]);
+  await expect(tabs.getByRole("link")).toHaveText([
+    "Profile",
+    "Kitchen",
+    "Photos",
+    "Training",
+  ]);
   await expect(tabs.getByRole("link", { name: "Profile" })).toHaveAttribute(
     "aria-current",
     "page",
