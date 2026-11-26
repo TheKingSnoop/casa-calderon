@@ -9,6 +9,7 @@ test("the profile has tabs, and Kitchen opens the recipe list", async ({
   const tabs = page.getByRole("navigation", { name: "Israel's spaces" });
   await expect(tabs.getByRole("link")).toHaveText([
     "Profile",
+    "Projects",
     "Kitchen",
     "Photos",
     "Training",
@@ -90,4 +91,17 @@ test("recipe photos load in a modern format and open full size", async ({
 test("unknown recipes are a 404", async ({ page }) => {
   const response = await page.goto("/members/israel/kitchen/nope/");
   expect(response?.status()).toBe(404);
+});
+
+test("all hub tabs fit on a 360px phone without scrolling", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 });
+  await page.goto("/members/israel/");
+  const nav = page.getByRole("navigation", { name: "Israel's spaces" });
+  const { scrollWidth, clientWidth } = await nav.evaluate((n) => ({
+    scrollWidth: n.scrollWidth,
+    clientWidth: n.clientWidth,
+  }));
+  expect(scrollWidth).toBeLessThanOrEqual(clientWidth);
 });

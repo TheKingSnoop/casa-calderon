@@ -54,6 +54,7 @@ for (const path of [
   "/members/israel/",
   "/members/israel/kitchen/",
   "/members/israel/kitchen/korean-meatballs/",
+  "/members/israel/projects/",
   "/members/israel/photos/",
   "/members/israel/training/",
   "/projects/casa-calderon-website/",

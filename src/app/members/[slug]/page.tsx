@@ -128,7 +128,8 @@ export default async function MemberPage({
         </Section>
       )}
 
-      {member.kind === "core" && (
+      {/* With the "projects" space, projects get their own tab instead */}
+      {member.kind === "core" && !member.spaces?.includes("projects") && (
         <Section title="Projects">
           {projects.length > 0 ? (
             <div className="grid gap-4 sm:grid-cols-2">
