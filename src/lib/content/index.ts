@@ -1,9 +1,22 @@
 import * as path from "node:path";
 import { loadContent, type Content } from "./loader";
-import type { Collective, Member, Project, ProjectType } from "./schema";
+import type {
+  Collective,
+  Member,
+  Project,
+  ProjectType,
+  Recipe,
+} from "./schema";
 
 export { ContentError, type ContentIssue } from "./loader";
-export type { Collective, Member, Project, ProjectType } from "./schema";
+export type {
+  Collective,
+  Member,
+  Project,
+  ProjectType,
+  Recipe,
+  Space,
+} from "./schema";
 
 /**
  * The single data layer for pages (see docs/03-architecture.md).
@@ -65,6 +78,21 @@ export function createContentStore(options: {
     getProject(slug: string): Project | undefined {
       return this.getProjects().find((p) => p.slug === slug);
     },
+
+    /**
+     * A member's recipes, newest first. Empty unless the member is visible
+     * and has the kitchen space switched on (spaces: [kitchen]).
+     */
+    getRecipes(member: string): Recipe[] {
+      if (!this.getMember(member)?.spaces?.includes("kitchen")) return [];
+      return content()
+        .recipes.filter((r) => r.member === member)
+        .filter(visible);
+    },
+
+    getRecipe(member: string, slug: string): Recipe | undefined {
+      return this.getRecipes(member).find((r) => r.slug === slug);
+    },
   };
 }
 
@@ -79,4 +107,7 @@ export const getMember = (slug: string) => store.getMember(slug);
 export const getProjects = (filter?: { member?: string; type?: ProjectType }) =>
   store.getProjects(filter);
 export const getProject = (slug: string) => store.getProject(slug);
+export const getRecipes = (member: string) => store.getRecipes(member);
+export const getRecipe = (member: string, slug: string) =>
+  store.getRecipe(member, slug);
 export const showDrafts = store.showDrafts;

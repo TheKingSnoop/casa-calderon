@@ -7,16 +7,21 @@ import * as path from "node:path";
 import { ContentError, loadContent } from "../src/lib/content/loader";
 
 try {
-  const { collective, members, projects } = loadContent(
+  const { collective, members, projects, recipes } = loadContent(
     path.join(process.cwd(), "content"),
   );
-  const items = [...(collective ? [collective] : []), ...members, ...projects];
+  const items = [
+    ...(collective ? [collective] : []),
+    ...members,
+    ...projects,
+    ...recipes,
+  ];
   const drafts = items.filter((item) => !item.published).length;
   const home = collective
     ? `home page${collective.published ? "" : " (draft)"}`
     : "no home page yet";
   console.log(
-    `✔ Content OK: ${home}, ${members.length} members, ${projects.length} projects (${drafts} unpublished drafts, hidden on the live site)`,
+    `✔ Content OK: ${home}, ${members.length} members, ${projects.length} projects, ${recipes.length} recipe${recipes.length === 1 ? "" : "s"} (${drafts} unpublished drafts, hidden on the live site)`,
   );
 } catch (error) {
   if (error instanceof ContentError) {

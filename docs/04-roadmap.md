@@ -91,7 +91,7 @@ Decisions (2026-11-23): clean baseline design with tokens in `globals.css` (iden
 Before going public and the showcase, Israel's page becomes a "hub" showing what a member page can be ([ADR-0006](decisions/0006-member-hubs-and-spaces.md), FR-40 to FR-47). One space per PR. The last two M3 items (go public, showcase) follow this milestone.
 
 - [x] Creative CV from Israel's CV (timeline, education, languages, certifications) + "Download CV" / "View PDF" buttons with a placeholder PDF (live e2e test keeps it a placeholder until Israel publishes)
-- [ ] Kitchen space + tab bar (recipes, servings scaler, recipe structured data)
+- [x] Kitchen space + tab bar: recipe cards from Markdown files (ingredients, method, photos, date), first recipe from Israel's notes. Kept simple on purpose: tags, a servings scaler and recipe structured data wait for a larger catalogue
 - [ ] Photos space ("photo of the week")
 - [ ] Training space (routine + build-time charts from sample data)
 - [ ] Family album: locked placeholder only

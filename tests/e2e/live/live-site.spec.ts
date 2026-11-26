@@ -50,7 +50,12 @@ for (const path of ["/", "/projects/"]) {
   });
 }
 
-for (const path of ["/members/israel/", "/projects/casa-calderon-website/"]) {
+for (const path of [
+  "/members/israel/",
+  "/members/israel/kitchen/",
+  "/members/israel/kitchen/korean-meatballs/",
+  "/projects/casa-calderon-website/",
+]) {
   test(`draft page ${path} doesn't exist on the live site`, async ({
     page,
   }) => {
