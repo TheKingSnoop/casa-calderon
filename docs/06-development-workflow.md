@@ -4,11 +4,11 @@ How code gets from your editor to `main`, and the automatic checks that keep `ma
 
 ## The three safety nets
 
-| Layer                     | Tools                                                  | When it runs                   | Speed         | Can be skipped?                              |
-| ------------------------- | ------------------------------------------------------ | ------------------------------ | ------------- | -------------------------------------------- |
-| 1. Editor                 | ESLint + Prettier VS Code extensions                   | As you type / on save          | Instant       | Yes, it's advisory                           |
-| 2. Pre-commit hook        | Husky + lint-staged (ESLint, Prettier)                 | On `git commit`                | A few seconds | Yes (`--no-verify`), but don't               |
-| 3. Continuous integration | GitHub Actions (format, lint, type-check, test, build) | On every PR and push to `main` | 1–3 minutes   | No. It's the final say, and required from M3 |
+| Layer                     | Tools                                                  | When it runs                   | Speed         | Can be skipped?                                                                |
+| ------------------------- | ------------------------------------------------------ | ------------------------------ | ------------- | ------------------------------------------------------------------------------ |
+| 1. Editor                 | ESLint + Prettier VS Code extensions                   | As you type / on save          | Instant       | Yes, it's advisory                                                             |
+| 2. Pre-commit hook        | Husky + lint-staged (ESLint, Prettier)                 | On `git commit`                | A few seconds | Yes (`--no-verify`), but don't                                                 |
+| 3. Continuous integration | GitHub Actions (format, lint, type-check, test, build) | On every PR and push to `main` | 1–3 minutes   | No. The "Protect main" ruleset requires it (admins can bypass in an emergency) |
 
 Each layer is slower but more thorough than the one before. Most problems are caught in layer 1 or 2, so CI is rarely red.
 

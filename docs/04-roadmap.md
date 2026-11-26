@@ -10,7 +10,7 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 | M1        | Scaffold, Tooling & AWS Hosting | Israel | ✅ Done        |
 | M2        | Content Model & Data Layer      | Israel | ✅ Done        |
 | M3        | Core Pages + sibling showcase   | Israel | 🟡 Next        |
-| M3.5      | Member hub pilot (Israel)       | Israel | 🟡 In progress |
+| M3.5      | Member hub pilot (Israel)       | Israel | ✅ Done        |
 | M4        | Design, Accessibility & SEO     | Family | ⚪ Not started |
 | M5        | Content Collection & Launch     | Family | ⚪ Not started |
 | M6+       | Post-launch Enhancements        | Family | ⚪ Backlog     |
@@ -24,7 +24,7 @@ Every milestone has **exit criteria**. We don't move on until they're met. Each 
 - [x] AWS hosting approach ([ADR-0003](decisions/0003-hosting-on-aws.md)): `aws-calderon`, `eu-west-2`
 - [x] Brand name: **Casa Calderon**
 - [x] First commit; GitHub repo created: [TheKingSnoop/casa-calderon](https://github.com/TheKingSnoop/casa-calderon) (**private**)
-- [x] Branch protection deferred: not available on private repos on GitHub Free; enabled when the repo goes public at M3
+- [x] Branch protection deferred: not available on private repos on GitHub Free; enabled when the repo went public (2026-11-26, see M3)
 
 **Exit:** all _blocking_ open questions answered; repo on GitHub with these docs on `main`. ✅
 
@@ -81,7 +81,10 @@ Decisions (2026-11-23): clean baseline design with tokens in `globals.css` (iden
 - [x] Light/dark toggle in the header (remembers the choice, no flash on load; follows the OS setting until used)
 - [x] Personal touch before the showcase: full-width, theme-aware cover hero (Israel's own photos of the Bolivian altiplano from Sajama: by day in light mode, at sunset in dark mode; they replaced the earlier Adobe Stock images on 2026-11-26), logo (Israel's geometric dog badge) in the header + hero, with a simplified variant as the browser tab icon, `npm run images` (resize to AVIF/WebP, strip EXIF/GPS). Fonts: compared Google Fonts pairings incl. Latin American designers; **kept Geist for now**, to revisit after the showcase
 - [x] Deploy the CloudFront URL-function fix (keep the query string on trailing-slash redirects; found while building the test server). Deployed 2026-11-24; verified `/projects?member=marcy` → `/projects/?member=marcy`
-- [ ] Make the repo **public** and enable a branch ruleset on `main` (require PR + passing CI); check no secrets or private info in git history first
+- [x] Make the repo **public** and enable a branch ruleset on `main` (2026-11-26):
+  - **History scan first:** every version of every file on all branches. No secrets or credentials files, no image metadata in any committed image, no original photos, and the only PDF is the CV placeholder. The AWS account ID is in the infra code; that's not a secret. Israel's Gmail address appears in 18 web-merge commits, which he's happy with; "Keep my email addresses private" is now on.
+  - **"Protect main" ruleset:** PR required (0 approvals), the three CI checks required, no force-push or deletion; admins can bypass.
+  - **Secret scanning and push protection** on. Dependabot alerts are not enabled for now (see NFR-7).
 - [ ] **Showcase to siblings**, collect feedback, give them write access to the repo
 
 **Exit:** all _Must_ requirements work with placeholder content; siblings onboarded via CONTRIBUTING.md.
