@@ -2,7 +2,7 @@
 
 A shared portfolio website for the Calderon Patiño family. It's part studio page and part family introduction. A collective page shows what we can build together, for prospective clients and collaborators. Each member has their own page showing their skills, experience and projects (professional and personal), and who they are beyond the code.
 
-> **Status:** Milestone 2 complete: content lives in validated Markdown files (`content/`), with drafts hidden on the live site. Next: Milestone 3, Core Pages.
+> **Status:** Core pages, the member-hub pilot (Israel's page) and automated deploys are done; the repo is public. Next: the sibling showcase, then Milestone 4 (design, accessibility, SEO). New here? Start with [Welcome](docs/07-welcome.md).
 >
 > **Live (preview):** https://d2ea5d75wlmb93.cloudfront.net
 >
@@ -21,7 +21,7 @@ Pages for our parents may be added later (see [Roadmap](docs/04-roadmap.md) back
 
 ## Tech at a glance
 
-Node 26 · Next.js 16 (static export) · React 19 · TypeScript · Tailwind CSS 4 · Vitest · MDX content in Git · AWS `eu-west-2` London (S3 + CloudFront, CDK) · GitHub Actions. See [Architecture](docs/03-architecture.md) and [Decision Records](docs/decisions/).
+Node 26 · Next.js 16 (static export) · React 19 · TypeScript · Tailwind CSS 4 · Vitest · Markdown content in Git · AWS `eu-west-2` London (S3 + CloudFront, CDK) · GitHub Actions. See [Architecture](docs/03-architecture.md) and [Decision Records](docs/decisions/).
 
 ## Documentation
 
@@ -35,6 +35,7 @@ Read these in order if you're new to the project:
 6. [Development Workflow](docs/06-development-workflow.md): editor → commit hook → CI, everyday commands, troubleshooting
 7. [Decision Records](docs/decisions/): why we chose what we chose (ADRs)
 8. [Contributing](CONTRIBUTING.md): workflow, branching, commits, reviews
+9. [Welcome](docs/07-welcome.md): for Cristhyan, Marcy and Benjamin: what's built, your first contribution, publishing
 
 ## Getting started
 

@@ -8,7 +8,7 @@ Guidance for AI coding assistants working in this repository.
 
 ## Current phase
 
-**M1 and M2 are done** (site live at https://d2ea5d75wlmb93.cloudfront.net, auto-deployed from `main`; content layer in `src/lib/content`, placeholder content in `content/`, all unpublished). **M3 (Core Pages + sibling showcase) is next.** Israel is building solo through M3. Repo: `TheKingSnoop/casa-calderon` (private until M3). Check [docs/04-roadmap.md](docs/04-roadmap.md) for the current milestone before starting work, and [docs/decisions/](docs/decisions/) for accepted decisions.
+**M1, M2 and M3.5 are done; M3 is down to the sibling showcase** (site live at https://d2ea5d75wlmb93.cloudfront.net, auto-deployed from `main`; content layer in `src/lib/content`, placeholder content in `content/`, all unpublished; Israel's page is the member-hub pilot). Israel is building solo until the showcase. Repo: `TheKingSnoop/casa-calderon`, **public since 2026-11-26**: anything committed is visible to everyone, forever. `main` is protected by the "Protect main" ruleset (PR + the three CI checks; admins can bypass in an emergency). Secret scanning with push protection is on. Check [docs/04-roadmap.md](docs/04-roadmap.md) for the current milestone before starting work, and [docs/decisions/](docs/decisions/) for accepted decisions.
 
 ## Working agreements
 
