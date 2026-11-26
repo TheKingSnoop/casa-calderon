@@ -20,15 +20,15 @@ test.describe("home page", () => {
   });
 
   for (const [scheme, image] of [
-    ["light", "mountains-dawn"],
-    ["dark", "mountains-night"],
+    ["light", "sajama-day"],
+    ["dark", "sajama-dusk"],
   ] as const) {
     test(`shows the ${image} cover in ${scheme} mode, in a modern format, with alt text`, async ({
       page,
     }) => {
       await page.emulateMedia({ colorScheme: scheme });
       await page.goto("/");
-      const cover = page.getByRole("img", { name: /mountain ranges/ });
+      const cover = page.getByRole("img", { name: /volcanoes/ });
       await expect(cover).toBeVisible();
       // Actually decoded (not a broken image), the right version for the
       // theme, and AVIF/WebP was chosen

@@ -12,12 +12,13 @@ services:
   - title: Cloud on AWS
     description: "Placeholder: secure, low-cost infrastructure defined as code."
 contact: "Placeholder: how to start a conversation with us. For now, each of us lists how to reach them on our own page."
-# Hero background: layered mountains, dawn in light mode and night in dark
-# mode. Made with `npm run images` (metadata stripped).
+# Hero background: Israel's photos of the Bolivian altiplano from Sajama,
+# by day in light mode and at sunset in dark mode. Made with
+# `npm run images` (metadata stripped).
 cover:
-  src: /images/site/mountains-dawn
-  srcDark: /images/site/mountains-night
-  alt: "Layered mountain ranges fading into the distance under a soft sky"
+  src: /images/site/sajama-day
+  srcDark: /images/site/sajama-dusk
+  alt: "Snow-capped volcanoes rising above the Bolivian altiplano, seen from Sajama"
 ---
 
 _Placeholder: the family will write our story together._
