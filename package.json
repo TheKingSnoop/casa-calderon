@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "next dev",
     "content:check": "tsx scripts/check-content.ts",
+    "images": "tsx scripts/images.ts",
     "prebuild": "npm run content:check",
     "build": "next build",
     "lint": "eslint",
@@ -60,6 +61,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "prettier": "^3.10.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^5",

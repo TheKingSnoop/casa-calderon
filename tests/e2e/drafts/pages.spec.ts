@@ -19,6 +19,45 @@ test.describe("home page", () => {
     ]);
   });
 
+  for (const [scheme, image] of [
+    ["light", "mountains-dawn"],
+    ["dark", "mountains-night"],
+  ] as const) {
+    test(`shows the ${image} cover in ${scheme} mode, in a modern format, with alt text`, async ({
+      page,
+    }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto("/");
+      const cover = page.getByRole("img", { name: /mountain ranges/ });
+      await expect(cover).toBeVisible();
+      // Actually decoded (not a broken image), the right version for the
+      // theme, and AVIF/WebP was chosen
+      const { naturalWidth, currentSrc } = await cover.evaluate(
+        (img: HTMLImageElement) => ({
+          naturalWidth: img.naturalWidth,
+          currentSrc: img.currentSrc,
+        }),
+      );
+      expect(naturalWidth).toBeGreaterThan(0);
+      expect(currentSrc).toMatch(
+        new RegExp(`/images/site/${image}-\\d+\\.(avif|webp)$`),
+      );
+    });
+  }
+
+  test("shows the logo in the header only (hero logo switched off), hidden from screen readers", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    // SHOW_HERO_LOGO = false in src/components/hero.tsx
+    const logos = page.locator("svg[data-logo]");
+    await expect(logos).toHaveCount(1);
+    await expect(page.locator("header svg[data-logo]")).toHaveAttribute(
+      "aria-hidden",
+      "true",
+    );
+  });
+
   test("'Work with us' jumps to the contact section", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("link", { name: "Work with us" }).click();

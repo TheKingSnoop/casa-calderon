@@ -42,7 +42,7 @@ Everything about you lives in plain Markdown files. You don't need to touch any 
 
 - **Your profile:** `content/members/<your-slug>.md` (`israel`, `cristhyan`, `marcy`, `benjamin`). The file name is your URL: `/members/<your-slug>/`.
 - **A project:** `content/projects/<project-slug>.md` (lowercase letters, numbers, hyphens). List every contributor's slug in `members`.
-- **Images:** `public/images/<your-slug>/...`, referenced as `/images/<your-slug>/photo.webp`. Every image needs meaningful `alt` text.
+- **Images:** always prepare photos with `npm run images` (see "Adding photos" below). Every image needs meaningful `alt` text.
 - **Check your work:** `npm run content:check` (fast), or `npm run dev` to see it in the browser. Drafts are visible locally with a "Draft" badge.
 
 ### Publishing = your sign-off
@@ -62,7 +62,7 @@ order: 2 # position on the collective page (lower = first)
 published: false # set to true when you're happy for this to go live
 tagline: One sentence about what you do # optional
 status: Available for freelance # optional badge
-avatar: /images/your-slug/avatar.webp # optional
+avatar: /images/your-slug/avatar-640.webp # optional; made with `npm run images`
 links: # all optional
   github: https://github.com/your-username
   linkedin: https://www.linkedin.com/in/your-profile
@@ -139,12 +139,30 @@ services: # "What we offer", at least one
   - title: Web applications
     description: Full-stack web apps, from idea to deployed product.
 contact: How to start a conversation with us (optional)
+cover: # optional full-width hero photo, made with `npm run images`
+  src: /images/site/mountains-dawn # base path: no width or extension
+  srcDark: /images/site/mountains-night # optional: shown in dark mode
+  alt: Describe the photo for screen readers
 ---
 
 "Our story" in Markdown.
 ```
 
 Until it's published, the live site shows "Coming soon". The team, featured and joint-project sections fill themselves from member and project files: set `featured: true` on a project to show it on the home page.
+
+### Adding photos
+
+```bash
+npm run images -- <path-to-photo> <folder> <name>
+# e.g. npm run images -- ~/Pictures/me.jpg marcy avatar
+#   → public/images/marcy/avatar-{640,1280,1920}.{avif,webp}
+```
+
+The script resizes the photo to three widths in modern formats (AVIF and WebP) and **strips all metadata, including the GPS location** phones embed in photos. Then:
+
+- **Commit only the files in `public/images/`, never the original photo.**
+- **Only add photos of people who've agreed to be online.** Anything in `public/` is reachable by its URL once deployed, even on a draft page, and the repo's history keeps every committed file, even after it's deleted.
+- Reference a **cover** by its base path (`/images/site/cover`); the build checks every size exists. Reference an **avatar** by one file (`/images/marcy/avatar-640.webp`).
 
 ### Common errors
 

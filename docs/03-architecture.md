@@ -56,7 +56,7 @@ Each member and project is **one Markdown file**: YAML frontmatter for structure
 | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
 | Member                 | `content/members/<slug>.md`                | **name**, **role**, **order**, `kind` (`core`/`family`), `published`, `tagline`, `avatar`, `status`, `skills`, `experience`, `certifications`, `interests`, `links`                                          | Bio (required for `core`) |
 | Project                | `content/projects/<slug>.md`               | **title**, **summary** (max 160 characters), **members** (member slugs), **type** (`professional`/`personal`), **date**, `confidential`, `tech`, `links`, `images` (`alt` required), `featured`, `published` | Write-up                  |
-| Collective (home page) | `content/collective.md` (single, optional) | **tagline** (max 120), **pitch** (max 300), **services** (at least one `title` + `description`), `contact`, `published`                                                                                      | "Our story"               |
+| Collective (home page) | `content/collective.md` (single, optional) | **tagline** (max 120), **pitch** (max 300), **services** (at least one `title` + `description`), `contact`, `cover` (`src` base path + `alt`; files must exist), `published`                                 | "Our story"               |
 
 ### Data flow
 

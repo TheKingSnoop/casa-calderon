@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import {
   filterProjects,
   filtersToQuery,
@@ -28,15 +29,32 @@ export function ProjectBrowser({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const filters = parseFilters(
-    searchParams,
-    members.map((m) => m.slug),
+  const slugs = members.map((m) => m.slug);
+
+  // The filters live in component state, and the URL is updated from it.
+  // Why not read them straight from the URL? router.replace() updates the
+  // URL asynchronously: change "Member" then quickly "Type", and the second
+  // change would be built from the old URL, silently dropping the member
+  // (caught by the e2e tests on a busy machine).
+  const query = searchParams.toString();
+  const [syncedQuery, setSyncedQuery] = useState(query);
+  const [filters, setFilters] = useState(() =>
+    parseFilters(searchParams, slugs),
   );
+  // If the URL changes for any other reason (e.g. following a link to a
+  // filtered view), adopt it: React's "adjust state when a prop changes" pattern.
+  if (query !== syncedQuery) {
+    setSyncedQuery(query);
+    setFilters(parseFilters(searchParams, slugs));
+  }
+
   const visible = filterProjects(projects, filters);
   const active = Boolean(filters.member || filters.type);
 
-  const update = (next: ProjectFilters) =>
+  const update = (next: ProjectFilters) => {
+    setFilters(next);
     router.replace(`${pathname}${filtersToQuery(next)}`, { scroll: false });
+  };
 
   return (
     <div className="flex flex-col gap-6">

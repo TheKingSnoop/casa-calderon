@@ -26,6 +26,10 @@ function build(name: "live" | "drafts", env: Record<string, string>) {
 }
 
 rmSync(e2eDir, { recursive: true, force: true });
+// Start from a clean Next.js cache: Turbopack's build cache once served a
+// stale stylesheet after globals.css changed, so the tests ran against old
+// CSS. CI always builds from a clean checkout; this makes local runs match.
+rmSync(path.resolve(".next"), { recursive: true, force: true });
 build("live", { SHOW_DRAFTS: "false" });
 build("drafts", { SHOW_DRAFTS: "true" });
 console.log(

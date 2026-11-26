@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="25 30 150 150" fill="none" stroke-linejoin="round" stroke-linecap="round">
+  <!-- Casa Calderon browser tab icon: small-size variant of the dog badge
+       (original: assets/logo/logo-badge.svg; site version: src/components/logo.tsx).
+       At 16-32px the facet lines merge into a blob, so this keeps only the
+       head outline, tongue, eyes and nose, with heavier lines, and drops the circle. -->
+  <style>
+    .line { stroke: #171717; }
+    .solid { fill: #171717; stroke: #171717; }
+    @media (prefers-color-scheme: dark) {
+      .line { stroke: #ededed; }
+      .solid { fill: #ededed; stroke: #ededed; }
+    }
+  </style>
+  <g transform="translate(100 104) scale(0.78) translate(-100 -107)">
+    <polygon class="line" stroke-width="7" points="100,18 110,31 126,26 142,33 160,34 174,50 164,78 150,60 153,86 165,101 151,108 159,127 145,133 149,154 134,158 137,174 123,166 119,150 81,150 77,166 63,174 66,158 51,154 55,133 41,127 49,108 35,101 47,86 50,60 36,78 26,50 40,34 58,33 74,26 90,31"/>
+    <polyline class="line" stroke-width="7" points="119,150 121,180 113,194 100,198 87,194 79,180 81,150"/>
+    <polygon class="solid" stroke-width="4" points="110,76 121,68 135,75 121,82"/>
+    <polygon class="solid" stroke-width="4" points="90,76 79,68 65,75 79,82"/>
+    <polygon class="solid" stroke-width="4" points="84,96 116,96 124,108 112,123 88,123 76,108"/>
+  </g>
+</svg>
