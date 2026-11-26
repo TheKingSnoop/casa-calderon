@@ -22,6 +22,12 @@ export function formatMonth(isoDate: string): string {
   return `${MONTHS[month - 1]} ${year}`;
 }
 
+/** "2026-11-25" → "25 Nov 2026"; "2026-11" → "Nov 2026" */
+export function formatDate(isoDate: string): string {
+  const day = Number(isoDate.split("-")[2]);
+  return day ? `${day} ${formatMonth(isoDate)}` : formatMonth(isoDate);
+}
+
 /**
  * ("2024-09", undefined) → "Sep 2024 – Present"
  * (undefined, "2015-07") → "Jul 2015" (a single date, e.g. a graduation)

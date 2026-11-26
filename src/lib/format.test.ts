@@ -3,6 +3,7 @@ import {
   decodeEmail,
   displayUrl,
   encodeEmail,
+  formatDate,
   formatMonth,
   formatPeriod,
   initials,
@@ -19,6 +20,12 @@ describe("formatMonth / formatPeriod", () => {
   it("shows 'Present' when there's no end date", () => {
     expect(formatPeriod("2024-09")).toBe("Sep 2024 – Present");
     expect(formatPeriod("2024-09", "2025-06")).toBe("Sep 2024 – Jun 2025");
+  });
+
+  it("formats a full date as 'D Mon YYYY', and a month as 'Mon YYYY'", () => {
+    expect(formatDate("2026-11-25")).toBe("25 Nov 2026");
+    expect(formatDate("2026-11-05")).toBe("5 Nov 2026");
+    expect(formatDate("2026-11")).toBe("Nov 2026");
   });
 
   it("shows a single date when there's only an end date (e.g. graduation)", () => {

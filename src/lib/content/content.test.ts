@@ -131,6 +131,7 @@ describe("loadContent: valid content", () => {
       collective: null,
       members: [],
       projects: [],
+      recipes: [],
     });
   });
 

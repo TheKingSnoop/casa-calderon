@@ -13,6 +13,11 @@ export const PLACEHOLDER_SLUG = "_";
  * calls notFound(), so it renders the 404 page with `noindex`, and no draft
  * names leak into the build.
  */
-export function withPlaceholder<T extends { slug: string }>(params: T[]) {
-  return params.length > 0 ? params : [{ slug: PLACEHOLDER_SLUG }];
+export function withPlaceholder<T extends { slug: string }>(
+  params: T[],
+  /** For routes with more segments, e.g. { slug: "_", recipe: "_" } */
+  placeholder?: T,
+): T[] {
+  if (params.length > 0) return params;
+  return [placeholder ?? ({ slug: PLACEHOLDER_SLUG } as T)];
 }

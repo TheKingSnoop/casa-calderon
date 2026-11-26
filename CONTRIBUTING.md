@@ -107,6 +107,44 @@ building, what you're looking for.
 - Use a web version without your phone number or home address (NFR-6), and check the PDF's properties (author, title) for anything you don't want public.
 - If YAML lists contain commas inside an item, quote it: `["AWS (S3, Lambda)", Docker]`.
 
+### Recipes (the Kitchen space)
+
+Members can add extra pages ("spaces") to their hub, shown as tabs next to their profile ([ADR-0006](docs/decisions/0006-member-hubs-and-spaces.md)). To add a Kitchen:
+
+1. Add `spaces: [kitchen]` to your member file.
+2. Add one file per recipe in `content/members/<your-slug>/kitchen/`. The file name becomes the URL, e.g. `korean-meatballs.md` → `/members/<your-slug>/kitchen/korean-meatballs/`.
+3. Add photos with `npm run images -- <photo> <your-slug> <name>` (strips GPS and other metadata).
+
+```markdown
+---
+title: Korean meatballs
+date: 2026-11-25 # when you made it
+summary: One line for the Kitchen page card # optional, 160 characters max
+published: false # each recipe has its own sign-off
+photos: # optional; the first one is the main photo
+  - src: /images/your-slug/korean-meatballs-plate
+    alt: What's in the photo, for screen readers
+---
+
+An optional story or tip.
+
+## Ingredients
+
+### Meatballs
+
+- 60% pork, 40% beef
+
+## Method
+
+1. Fry and brown the meatballs.
+
+## To serve
+
+- Any other `##` sections go full width under the card
+```
+
+`## Ingredients` and `## Method` are required; they sit side by side on wide screens. Write both units for oven temperatures, e.g. 350°F (175°C). A recipe only appears on the live site when both it **and** your page are published.
+
 ### Project template
 
 ```markdown

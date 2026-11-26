@@ -35,8 +35,18 @@ const publicImagePath = z
     message: 'Must be a path like "/images/<your-slug>/photo.webp"',
   });
 
+/** Base path of an image made by `npm run images` (no width or extension) */
+const imageBasePath = z.string().regex(/^\/images\/[a-z0-9-]+\/[a-z0-9-]+$/, {
+  message:
+    'Use the base path printed by `npm run images`, e.g. "/images/site/cover" (no width or extension)',
+});
+
 /** A PDF in public/files/<slug>/, e.g. "/files/israel/cv.pdf" */
 export const CV_PATH_PATTERN = /^\/files\/[a-z0-9-]+\/[a-z0-9-]+\.pdf$/;
+
+/** Spaces a member can switch on (ADR-0006) */
+export const SPACES = ["kitchen"] as const;
+export type Space = (typeof SPACES)[number];
 
 // ── Member ──────────────────────────────────────────────────────────────────
 
@@ -119,6 +129,12 @@ export const memberFrontmatterSchema = z.strictObject({
       }),
     )
     .optional(),
+  /**
+   * Extra pages ("spaces") on this member's hub, shown as tabs next to
+   * their profile (FR-42, ADR-0006). Today: "kitchen" (recipes in
+   * content/members/<slug>/kitchen/).
+   */
+  spaces: z.array(z.enum(SPACES)).optional(),
   /** "Beyond the code" (FR-16) */
   interests: z.array(nonEmpty).optional(),
   links: memberLinksSchema.default({}),
@@ -133,12 +149,6 @@ export type Member = MemberFrontmatter & {
 };
 
 // ── Collective (content/collective.md: the home page) ───────────────────────
-
-/** Base path of an image made by `npm run images` (no width or extension) */
-const imageBasePath = z.string().regex(/^\/images\/[a-z0-9-]+\/[a-z0-9-]+$/, {
-  message:
-    'Use the base path printed by `npm run images`, e.g. "/images/site/cover" (no width or extension)',
-});
 
 export const collectiveFrontmatterSchema = z.strictObject({
   /** Hero headline under the site name */
@@ -223,5 +233,38 @@ export type ProjectType = ProjectFrontmatter["type"];
 export type Project = ProjectFrontmatter & {
   slug: string;
   /** Markdown body: problem, approach, outcome */
+  body: string;
+};
+
+// ── Recipe (content/members/<slug>/kitchen/<recipe>.md) ─────────────────────
+
+export const recipeFrontmatterSchema = z.strictObject({
+  title: nonEmpty,
+  /** When it was made, e.g. 2026-11-25 */
+  date: isoDate,
+  /** One line for the Kitchen page cards (optional) */
+  summary: nonEmpty
+    .max(160, "Keep the summary to 160 characters or fewer")
+    .optional(),
+  /** First photo is the main one. Made with `npm run images` */
+  photos: z
+    .array(
+      z.strictObject({
+        src: imageBasePath,
+        alt: nonEmpty.describe("Describe the photo for screen readers"),
+      }),
+    )
+    .default([]),
+  /** Privacy sign-off (NFR-6): only `true` appears on the live site */
+  published: z.boolean().default(false),
+});
+
+export type RecipeFrontmatter = z.infer<typeof recipeFrontmatterSchema>;
+
+export type Recipe = RecipeFrontmatter & {
+  slug: string;
+  /** The member whose kitchen it's in */
+  member: string;
+  /** Markdown: "## Ingredients", "## Method", optionally more sections */
   body: string;
 };

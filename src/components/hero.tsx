@@ -3,6 +3,7 @@ import type { Collective } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
 import { DraftBadge } from "./badges";
 import { Logo } from "./logo";
+import { ResponsivePicture } from "./responsive-picture";
 
 /**
  * Logo above the site name in the hero. Off for now (Israel: cleaner
@@ -10,15 +11,7 @@ import { Logo } from "./logo";
  */
 const SHOW_HERO_LOGO = false;
 
-const WIDTHS = [640, 1280, 1920];
-const srcSet = (src: string, format: "avif" | "webp") =>
-  WIDTHS.map((w) => `${src}-${w}.${format} ${w}w`).join(", ");
-
-/**
- * One cover image as <picture>: AVIF with a WebP fallback, in the widths
- * `npm run images` produces. Static export has no image optimiser, so the
- * browser picks the format and width itself.
- */
+/** One full-width cover image (see ResponsivePicture) */
 function CoverPicture({
   src,
   alt,
@@ -29,17 +22,14 @@ function CoverPicture({
   className?: string;
 }) {
   return (
-    <picture className={className}>
-      <source type="image/avif" srcSet={srcSet(src, "avif")} sizes="100vw" />
-      <img
-        src={`${src}-1280.webp`}
-        srcSet={srcSet(src, "webp")}
-        sizes="100vw"
-        alt={alt}
-        fetchPriority="high"
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-    </picture>
+    <ResponsivePicture
+      src={src}
+      alt={alt}
+      sizes="100vw"
+      priority
+      className={className}
+      imgClassName="absolute inset-0 -z-10 h-full w-full object-cover"
+    />
   );
 }
 

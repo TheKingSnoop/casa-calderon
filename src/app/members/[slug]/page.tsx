@@ -11,6 +11,7 @@ import {
 } from "@/components/cv";
 import { EmailLink } from "@/components/email-link";
 import { Markdown } from "@/components/markdown";
+import { MemberTabs } from "@/components/member-tabs";
 import { ProjectCard } from "@/components/project-card";
 import { getMember, getMembers, getProjects, type Member } from "@/lib/content";
 import { displayUrl, encodeEmail } from "@/lib/format";
@@ -63,6 +64,8 @@ export default async function MemberPage({
           {member.tagline && <p>{member.tagline}</p>}
         </div>
       </header>
+
+      <MemberTabs member={member} current="profile" />
 
       <MemberLinks member={member} />
 
