@@ -91,6 +91,55 @@ test.describe("member pages", () => {
     ).toBeVisible();
   });
 
+  test("Israel's page shows his CV as a timeline, in CV order", async ({
+    page,
+  }) => {
+    await page.goto("/members/israel/");
+    await expect(page.getByRole("heading", { level: 2 })).toHaveText([
+      "About",
+      "Experience",
+      "Education",
+      "Skills",
+      "Languages",
+      "Certifications",
+      "Beyond the code",
+      "Projects",
+    ]);
+    const experience = page.getByRole("list", { name: "Experience" });
+    await expect(experience.getByRole("heading", { level: 3 })).toHaveCount(5);
+    await expect(
+      experience.getByRole("heading", { level: 3 }).first(),
+    ).toContainText("Volunteer Software Developer");
+    // A graduation has a single date, not "– Present"
+    await expect(
+      page.getByRole("list", { name: "Education" }).getByText("Jul 2015"),
+    ).toBeVisible();
+    await expect(page.getByText(/– Present/)).toHaveCount(0);
+  });
+
+  test("the CV buttons download and open the PDF", async ({ page }) => {
+    await page.goto("/members/israel/");
+    const download = page.getByRole("link", { name: "Download CV as a PDF" });
+    await expect(download).toHaveAttribute("href", "/files/israel/cv.pdf");
+    await expect(download).toHaveAttribute(
+      "download",
+      "Israel-Calderon-CV.pdf",
+    );
+    const view = page.getByRole("link", { name: /View PDF/ });
+    await expect(view).toHaveAttribute("target", "_blank");
+
+    const pdf = await page.request.get("/files/israel/cv.pdf");
+    expect(pdf.status()).toBe(200);
+    expect(pdf.headers()["content-type"]).toBe("application/pdf");
+  });
+
+  test("members without a CV have no CV buttons", async ({ page }) => {
+    await page.goto("/members/benjamin/");
+    await expect(page.getByRole("link", { name: /Download CV/ })).toHaveCount(
+      0,
+    );
+  });
+
   test("unknown members are a 404", async ({ page }) => {
     const response = await page.goto("/members/nobody/");
     expect(response?.status()).toBe(404);

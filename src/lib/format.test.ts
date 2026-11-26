@@ -20,6 +20,10 @@ describe("formatMonth / formatPeriod", () => {
     expect(formatPeriod("2024-09")).toBe("Sep 2024 – Present");
     expect(formatPeriod("2024-09", "2025-06")).toBe("Sep 2024 – Jun 2025");
   });
+
+  it("shows a single date when there's only an end date (e.g. graduation)", () => {
+    expect(formatPeriod(undefined, "2015-07")).toBe("Jul 2015");
+  });
 });
 
 describe("initials", () => {

@@ -24,3 +24,4 @@ An ADR is a short note that captures **one** significant decision: the context, 
 | 0003 | [Host on AWS (S3 + CloudFront, managed with CDK)](0003-hosting-on-aws.md)                | Accepted |
 | 0004 | [Toolchain and quality gates](0004-toolchain-and-quality-gates.md)                       | Accepted |
 | 0005 | [Content pipeline: Markdown files, own loader, published flag](0005-content-pipeline.md) | Accepted |
+| 0006 | [Member hubs and spaces](0006-member-hubs-and-spaces.md)                                 | Accepted |

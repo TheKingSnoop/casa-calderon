@@ -3,16 +3,17 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/avatar";
 import { Badge, DraftBadge, TagList } from "@/components/badges";
+import {
+  CertificationList,
+  CvActions,
+  CvTimeline,
+  LanguageList,
+} from "@/components/cv";
 import { EmailLink } from "@/components/email-link";
 import { Markdown } from "@/components/markdown";
 import { ProjectCard } from "@/components/project-card";
 import { getMember, getMembers, getProjects, type Member } from "@/lib/content";
-import {
-  displayUrl,
-  encodeEmail,
-  formatMonth,
-  formatPeriod,
-} from "@/lib/format";
+import { displayUrl, encodeEmail } from "@/lib/format";
 import { pageTitle } from "@/lib/site";
 import { withPlaceholder } from "@/lib/static-params";
 
@@ -42,6 +43,9 @@ export default async function MemberPage({
 
   const projects = getProjects({ member: member.slug });
   const firstName = member.name.split(" ")[0];
+  const experience = member.experience ?? [];
+  const work = experience.filter((item) => item.kind !== "education");
+  const education = experience.filter((item) => item.kind === "education");
 
   return (
     <article className="mx-auto w-full max-w-3xl px-6 py-12">
@@ -62,9 +66,27 @@ export default async function MemberPage({
 
       <MemberLinks member={member} />
 
+      {member.links.cv && (
+        <div className="mt-8">
+          <CvActions cv={member.links.cv} name={member.name} />
+        </div>
+      )}
+
       {member.bio && (
         <Section title="About">
           <Markdown>{member.bio}</Markdown>
+        </Section>
+      )}
+
+      {work.length > 0 && (
+        <Section title="Experience">
+          <CvTimeline items={work} label="Experience" />
+        </Section>
+      )}
+
+      {education.length > 0 && (
+        <Section title="Education">
+          <CvTimeline items={education} label="Education" />
         </Section>
       )}
 
@@ -85,58 +107,15 @@ export default async function MemberPage({
         </Section>
       )}
 
-      {member.experience && member.experience.length > 0 && (
-        <Section title="Experience">
-          <ol className="flex flex-col gap-6 border-l border-border pl-6">
-            {member.experience.map((item) => (
-              <li
-                key={`${item.org}-${item.title}-${item.start}`}
-                className="flex flex-col gap-1"
-              >
-                <p className="font-medium">
-                  {item.title} · {item.org}
-                </p>
-                <p className="text-sm text-muted">
-                  {formatPeriod(item.start, item.end)}
-                  {item.kind !== "work" && (
-                    <>
-                      {" "}
-                      ·{" "}
-                      {item.kind === "education" ? "Education" : "Achievement"}
-                    </>
-                  )}
-                </p>
-                {item.summary && <p>{item.summary}</p>}
-              </li>
-            ))}
-          </ol>
+      {member.languages && member.languages.length > 0 && (
+        <Section title="Languages">
+          <LanguageList languages={member.languages} />
         </Section>
       )}
 
       {member.certifications && member.certifications.length > 0 && (
         <Section title="Certifications">
-          <ul className="flex flex-col gap-3">
-            {member.certifications.map((cert) => (
-              <li key={`${cert.name}-${cert.date}`}>
-                <p className="font-medium">{cert.name}</p>
-                <p className="text-sm text-muted">
-                  {cert.issuer} ·{" "}
-                  <time dateTime={cert.date}>{formatMonth(cert.date)}</time>
-                  {cert.url && (
-                    <>
-                      {" · "}
-                      <a
-                        href={cert.url}
-                        className="text-accent underline underline-offset-2"
-                      >
-                        Verify<span className="sr-only"> {cert.name}</span>
-                      </a>
-                    </>
-                  )}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <CertificationList certifications={member.certifications} />
         </Section>
       )}
 
@@ -175,7 +154,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 function MemberLinks({ member }: { member: Member }) {
-  const { github, linkedin, website, cv, email } = member.links;
+  // The CV gets its own buttons (CvActions), so it isn't listed here.
+  const { github, linkedin, website, email } = member.links;
   const linkClass = "text-accent underline underline-offset-2";
   const items: { label: string; node: ReactNode }[] = [];
 
@@ -203,15 +183,6 @@ function MemberLinks({ member }: { member: Member }) {
       node: (
         <a rel="me" href={website} className={linkClass}>
           {displayUrl(website)}
-        </a>
-      ),
-    });
-  if (cv)
-    items.push({
-      label: "CV",
-      node: (
-        <a href={cv} className={linkClass}>
-          Download CV
         </a>
       ),
     });

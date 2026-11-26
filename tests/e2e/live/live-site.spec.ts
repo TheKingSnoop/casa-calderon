@@ -60,6 +60,15 @@ for (const path of ["/members/israel/", "/projects/casa-calderon-website/"]) {
   });
 }
 
+// Files in public/ are deployed even while their page is a draft, so a real
+// CV (with contact details) must only replace the placeholder when its owner
+// publishes. Update this test in that same PR, on purpose.
+test("Israel's CV file is still the placeholder", async ({ page }) => {
+  const pdf = await page.request.get("/files/israel/cv.pdf");
+  expect(pdf.status()).toBe(200);
+  expect((await pdf.body()).toString("latin1")).toContain("Placeholder CV");
+});
+
 test("responses carry the production security headers", async ({ page }) => {
   const response = await page.goto("/");
   const headers = response?.headers() ?? {};

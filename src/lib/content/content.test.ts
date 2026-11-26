@@ -300,6 +300,93 @@ services:
   "Our story starts here.",
 );
 
+describe("member CV", () => {
+  const withCv = (yaml: string) =>
+    md(`name: Ana\nrole: Dev\norder: 1\n${yaml}`, "Bio");
+
+  it("accepts CV entries with location, highlights, languages and undated certifications", () => {
+    const content = loadContent(
+      makeContent({
+        "members/ana.md": withCv(
+          [
+            "experience:",
+            "  - title: Engineer",
+            "    org: Acme",
+            "    kind: work",
+            "    start: 2023-01",
+            "    location: London, UK",
+            "    highlights: [Built things, Shipped things]",
+            "  - title: BSc Chemistry",
+            "    org: A university",
+            "    kind: education",
+            "    end: 2015-07",
+            "languages:",
+            "  - name: French",
+            "    level: Intermediate",
+            "certifications:",
+            "  - name: AWS Certified Cloud Practitioner",
+            "    issuer: Amazon Web Services",
+          ].join("\n"),
+        ),
+      }),
+    );
+    const [ana] = content.members;
+    expect(ana.experience?.[0].highlights).toEqual([
+      "Built things",
+      "Shipped things",
+    ]);
+    expect(ana.experience?.[1]).toMatchObject({ end: "2015-07" });
+    expect(ana.languages).toEqual([{ name: "French", level: "Intermediate" }]);
+    expect(ana.certifications?.[0].date).toBeUndefined();
+  });
+
+  it("needs at least a start or an end date on each entry", () => {
+    const errors = errorsFor({
+      "members/ana.md": withCv(
+        "experience:\n  - title: Engineer\n    org: Acme\n    kind: work",
+      ),
+    });
+    expect(errors).toEqual([
+      expect.stringContaining(
+        "experience[0].start: Add a start date, an end date, or both",
+      ),
+    ]);
+  });
+
+  it("checks a CV in public/ exists, and accepts a URL", () => {
+    const rootDir = makeContent({
+      "members/ana.md": withCv("links:\n  cv: /files/ana/cv.pdf"),
+    });
+    expect(() => loadContent(rootDir)).toThrow(
+      /links\.cv: missing public\/files\/ana\/cv\.pdf/,
+    );
+
+    const pdf = path.join(rootDir, "..", "public", "files", "ana", "cv.pdf");
+    mkdirSync(path.dirname(pdf), { recursive: true });
+    writeFileSync(pdf, "");
+    expect(loadContent(rootDir).members[0].links.cv).toBe("/files/ana/cv.pdf");
+
+    expect(
+      loadContent(
+        makeContent({
+          "members/ana.md": withCv("links:\n  cv: https://example.com/cv.pdf"),
+        }),
+      ).members[0].links.cv,
+    ).toBe("https://example.com/cv.pdf");
+  });
+
+  it("rejects a CV path outside public/files/<slug>/", () => {
+    const errors = errorsFor({
+      "members/ana.md": withCv("links:\n  cv: /images/cv.pdf"),
+    });
+    expect(errors).toEqual([
+      expect.stringContaining(
+        'links.cv: Use a URL, or a path like "/files/<your-slug>/cv.pdf"',
+      ),
+    ]);
+  });
+});
+
 describe("collective.md", () => {
   it("loads the home page content with the body as the story", () => {
     const content = loadContent(makeContent({ "collective.md": collective }));

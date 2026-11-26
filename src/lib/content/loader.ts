@@ -4,6 +4,7 @@ import matter from "gray-matter";
 import type { z } from "zod";
 import {
   collectiveFrontmatterSchema,
+  CV_PATH_PATTERN,
   memberFrontmatterSchema,
   projectFrontmatterSchema,
   SLUG_PATTERN,
@@ -70,8 +71,7 @@ export function loadContent(rootDir: string): Content {
         collective = { ...parsed.data, story: entry.body };
         const cover = parsed.data.cover;
         if (cover) {
-          // public/ sits next to content/; check every generated size exists.
-          const publicDir = path.join(rootDir, "..", "public");
+          // Check every generated size exists.
           const variants = [
             ["src", cover.src],
             ["srcDark", cover.srcDark],
@@ -79,7 +79,7 @@ export function loadContent(rootDir: string): Content {
           for (const [field, src] of variants) {
             if (!src) continue;
             const missing = coverFiles(src).filter(
-              (file) => !existsSync(path.join(publicDir, file)),
+              (file) => !existsSync(publicFile(rootDir, file)),
             );
             if (missing.length > 0) {
               issues.push({
@@ -108,6 +108,17 @@ export function loadContent(rootDir: string): Content {
           message: "bio: add a short bio below the frontmatter (---)",
         });
         return [];
+      }
+      const cv = parsed.data.links.cv;
+      if (
+        cv &&
+        CV_PATH_PATTERN.test(cv) &&
+        !existsSync(publicFile(rootDir, cv))
+      ) {
+        issues.push({
+          file,
+          message: `links.cv: missing public${cv}. Add the PDF there, or use a URL`,
+        });
       }
       return [{ ...parsed.data, slug, bio: body } satisfies Member];
     },
@@ -149,6 +160,11 @@ export function loadContent(rootDir: string): Content {
     ),
     projects: projects.sort((a, b) => b.date.localeCompare(a.date)),
   };
+}
+
+/** public/ sits next to content/: "/files/a.pdf" → <root>/../public/files/a.pdf */
+function publicFile(rootDir: string, urlPath: string): string {
+  return path.join(rootDir, "..", "public", urlPath);
 }
 
 /**

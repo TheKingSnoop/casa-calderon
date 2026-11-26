@@ -68,22 +68,29 @@ links: # all optional
   linkedin: https://www.linkedin.com/in/your-profile
   website: https://example.com
   email: you@example.com
+  cv: /files/your-slug/cv.pdf # or a URL; see "Your CV as a PDF" below
 skills: # optional
   - category: Languages
     items: [TypeScript, Python]
   - category: Cloud
     items: [AWS Lambda, S3]
-experience: # optional; kind: work | education | achievement
+experience: # optional, newest first; kind: work | education | achievement
   - title: Software Engineer
     org: Company
     kind: work
-    start: 2024-09 # "YYYY-MM" or "YYYY-MM-DD"
+    start: 2024-09 # "YYYY-MM" or "YYYY-MM-DD"; optional if there's an end
     # end: 2025-06  # omit for "present"
-    summary: What you did, in one line # optional
+    location: London, UK # optional
+    summary: About the role or the organisation, in one line # optional
+    highlights: # optional CV bullet points
+      - What you did and achieved
+languages: # optional
+  - name: Spanish
+    level: Native
 certifications: # optional
   - name: AWS Certified Solutions Architect – Associate
     issuer: Amazon Web Services
-    date: 2026-10
+    date: 2026-10 # optional
     url: https://www.credly.com/badges/... # optional verification link
 interests: [Football, Cooking] # "Beyond the code", optional
 ---
@@ -91,6 +98,14 @@ interests: [Football, Cooking] # "Beyond the code", optional
 Your bio in Markdown. A few short paragraphs: who you are, what you enjoy
 building, what you're looking for.
 ```
+
+### Your CV as a PDF
+
+`links.cv` adds "Download CV" and "View PDF" buttons to your page. Put the PDF in `public/files/<your-slug>/cv.pdf`.
+
+- **Anything in `public/` is reachable by URL, even while your page is a draft.** Keep a placeholder there until you publish, and add your real CV in the same PR that sets `published: true` (update the live e2e test that checks for the placeholder at the same time).
+- Use a web version without your phone number or home address (NFR-6), and check the PDF's properties (author, title) for anything you don't want public.
+- If YAML lists contain commas inside an item, quote it: `["AWS (S3, Lambda)", Docker]`.
 
 ### Project template
 

@@ -35,14 +35,28 @@ const publicImagePath = z
     message: 'Must be a path like "/images/<your-slug>/photo.webp"',
   });
 
+/** A PDF in public/files/<slug>/, e.g. "/files/israel/cv.pdf" */
+export const CV_PATH_PATTERN = /^\/files\/[a-z0-9-]+\/[a-z0-9-]+\.pdf$/;
+
 // ── Member ──────────────────────────────────────────────────────────────────
 
 export const memberLinksSchema = z.strictObject({
   github: z.url().optional(),
   linkedin: z.url().optional(),
   website: z.url().optional(),
-  /** Path to a PDF in public/, or a URL */
-  cv: z.string().min(1).optional(),
+  /**
+   * Your CV as a PDF: a path in public/ (checked at build time), or a URL.
+   * Anything in public/ is reachable by URL even while your page is a draft,
+   * so keep a placeholder there until you publish (see CONTRIBUTING.md).
+   */
+  cv: z
+    .string()
+    .refine(
+      (value) =>
+        CV_PATH_PATTERN.test(value) || z.url().safeParse(value).success,
+      'Use a URL, or a path like "/files/<your-slug>/cv.pdf"',
+    )
+    .optional(),
   email: z.email().optional(),
 });
 
@@ -64,25 +78,42 @@ export const memberFrontmatterSchema = z.strictObject({
       z.strictObject({ category: nonEmpty, items: z.array(nonEmpty).min(1) }),
     )
     .optional(),
+  /** The CV (FR-12): newest first, in the order written */
   experience: z
     .array(
-      z.strictObject({
-        title: nonEmpty,
-        org: nonEmpty,
-        kind: z.enum(["work", "education", "achievement"]),
-        start: isoDate,
-        /** Omit for "present" */
-        end: isoDate.optional(),
-        summary: nonEmpty.optional(),
-      }),
+      z
+        .strictObject({
+          title: nonEmpty,
+          org: nonEmpty,
+          kind: z.enum(["work", "education", "achievement"]),
+          /** Optional only when there's an `end`, e.g. a graduation date */
+          start: isoDate.optional(),
+          /** Omit for "present" */
+          end: isoDate.optional(),
+          /** e.g. "London, UK" or "Remote" */
+          location: nonEmpty.optional(),
+          /** One line about the role or the organisation */
+          summary: nonEmpty.optional(),
+          /** CV bullet points: what you did and achieved */
+          highlights: z.array(nonEmpty).optional(),
+        })
+        .refine((item) => item.start || item.end, {
+          message: "Add a start date, an end date, or both",
+          path: ["start"],
+        }),
     )
+    .optional(),
+  /** Spoken languages, e.g. { name: French, level: Intermediate } */
+  languages: z
+    .array(z.strictObject({ name: nonEmpty, level: nonEmpty.optional() }))
     .optional(),
   certifications: z
     .array(
       z.strictObject({
         name: nonEmpty,
         issuer: nonEmpty,
-        date: isoDate,
+        /** Optional: when it was awarded */
+        date: isoDate.optional(),
         /** Verification link, e.g. a Credly badge */
         url: z.url().optional(),
       }),
