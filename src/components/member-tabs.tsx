@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Member, Space } from "@/lib/content";
 
 const SPACE_LABELS: Record<Space, string> = {
+  projects: "Projects",
   kitchen: "Kitchen",
   photos: "Photos",
   training: "Training",
@@ -37,7 +38,7 @@ export function MemberTabs({
       aria-label={`${firstName}'s spaces`}
       className="mt-8 overflow-x-auto border-b border-border"
     >
-      <ul className="flex gap-6">
+      <ul className="flex gap-3 sm:gap-6">
         {tabs.map((tab) => {
           const isCurrent = tab.id === current;
           return (
@@ -45,7 +46,7 @@ export function MemberTabs({
               <Link
                 href={tab.href}
                 aria-current={isCurrent ? "page" : undefined}
-                className={`-mb-px inline-block border-b-2 px-1 py-3 font-medium whitespace-nowrap ${
+                className={`-mb-px inline-block border-b-2 px-0 py-3 text-sm font-medium sm:px-1 sm:text-base whitespace-nowrap ${
                   isCurrent
                     ? "border-accent text-foreground"
                     : "border-transparent text-muted hover:text-foreground"

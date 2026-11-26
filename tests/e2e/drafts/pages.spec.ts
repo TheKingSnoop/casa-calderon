@@ -84,6 +84,47 @@ test.describe("member pages", () => {
     await expect(projects.getByRole("article")).toHaveCount(2);
   });
 
+  test("Israel's projects are in their own tab, not on his profile", async ({
+    page,
+  }) => {
+    await page.goto("/members/israel/");
+    await expect(page.getByRole("region", { name: "Projects" })).toHaveCount(0);
+    await page
+      .getByRole("navigation", { name: "Israel's spaces" })
+      .getByRole("link", { name: "Projects" })
+      .click();
+    await expect(page).toHaveURL(/\/members\/israel\/projects\/$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Projects",
+    );
+    await expect(
+      page.getByRole("link", { name: "Casa Calderon website" }),
+    ).toBeVisible();
+  });
+
+  test("members without the projects space have no projects tab", async ({
+    page,
+  }) => {
+    const response = await page.goto("/members/cristhyan/projects/");
+    expect(response?.status()).toBe(404);
+  });
+
+  test("Israel's photo replaces his initials on his page and the home page", async ({
+    page,
+  }) => {
+    for (const path of ["/members/israel/", "/"]) {
+      await page.goto(path);
+      const avatar = page.locator('img[src="/images/israel/avatar-640.webp"]');
+      await expect(avatar).toBeVisible();
+      expect(
+        await avatar.evaluate((img: HTMLImageElement) => img.naturalWidth),
+      ).toBeGreaterThan(0);
+    }
+    // Members without a photo still show initials
+    await page.goto("/members/marcy/");
+    await expect(page.getByText("MC", { exact: true })).toBeVisible();
+  });
+
   test("show an empty state when there are no projects", async ({ page }) => {
     await page.goto("/members/benjamin/");
     await expect(
@@ -103,7 +144,6 @@ test.describe("member pages", () => {
       "Languages",
       "Certifications",
       "Beyond the code",
-      "Projects",
     ]);
     const experience = page.getByRole("list", { name: "Experience" });
     await expect(experience.getByRole("heading", { level: 3 })).toHaveCount(5);

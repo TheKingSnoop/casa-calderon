@@ -97,6 +97,7 @@ Before going public and the showcase, Israel's page becomes a "hub" showing what
 - [x] Kitchen space + tab bar: recipe cards from Markdown files (ingredients, method, photos, date), first recipe from Israel's notes. Kept simple on purpose: tags, a servings scaler and recipe structured data wait for a larger catalogue
 - [x] Photos space: tab + "coming soon" page (2026-11-26). Content (a "photo of the week" series) later
 - [x] Training space: tab + "coming soon" page (2026-11-26). Content (routine + build-time charts) later
+- [x] Projects tab: with `spaces: [projects, ...]`, a member's projects move from the profile into their own tab (Israel's choice; other members keep them on the profile). All five tabs fit on a 360px phone
 - [ ] Family album: locked placeholder only (deferred; not needed for the showcase)
 
 **Exit:** the hub works with placeholder content where real content isn't ready; nothing personal on the live site until Israel publishes.

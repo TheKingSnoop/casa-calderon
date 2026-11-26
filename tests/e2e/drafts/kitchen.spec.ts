@@ -9,6 +9,7 @@ test("the profile has tabs, and Kitchen opens the recipe list", async ({
   const tabs = page.getByRole("navigation", { name: "Israel's spaces" });
   await expect(tabs.getByRole("link")).toHaveText([
     "Profile",
+    "Projects",
     "Kitchen",
     "Photos",
     "Training",
@@ -90,4 +91,24 @@ test("recipe photos load in a modern format and open full size", async ({
 test("unknown recipes are a 404", async ({ page }) => {
   const response = await page.goto("/members/israel/kitchen/nope/");
   expect(response?.status()).toBe(404);
+});
+
+// Fonts render slightly differently per OS (CI on Linux was 2px wider than
+// Windows), so the tabs need real room, not an exact fit.
+test("all hub tabs fit on a 360px phone without scrolling", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 360, height: 640 });
+  await page.goto("/members/israel/");
+  const nav = page.getByRole("navigation", { name: "Israel's spaces" });
+  const { used, available } = await nav.evaluate((n) => {
+    const tabs = [...n.querySelectorAll("li")];
+    return {
+      used:
+        tabs.at(-1)!.getBoundingClientRect().right -
+        tabs[0].getBoundingClientRect().left,
+      available: n.clientWidth,
+    };
+  });
+  expect(used).toBeLessThanOrEqual(available);
 });

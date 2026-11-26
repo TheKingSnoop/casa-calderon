@@ -110,7 +110,7 @@ building, what you're looking for.
 
 ### Recipes (the Kitchen space)
 
-Members can add extra pages ("spaces") to their hub, shown as tabs next to their profile. Available spaces: `kitchen`, plus `photos` and `training`, which are "coming soon" pages for now ([ADR-0006](docs/decisions/0006-member-hubs-and-spaces.md)). To add a Kitchen:
+Members can add extra pages ("spaces") to their hub, shown as tabs next to their profile. Available spaces, shown as tabs in the order you list them: `projects` (moves your projects from your profile into their own tab), `kitchen`, plus `photos` and `training`, which are "coming soon" pages for now ([ADR-0006](docs/decisions/0006-member-hubs-and-spaces.md)). To add a Kitchen:
 
 1. Add `spaces: [kitchen]` to your member file.
 2. Add one file per recipe in `content/members/<your-slug>/kitchen/`. The file name becomes the URL, e.g. `korean-meatballs.md` → `/members/<your-slug>/kitchen/korean-meatballs/`.

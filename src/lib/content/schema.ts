@@ -45,7 +45,7 @@ const imageBasePath = z.string().regex(/^\/images\/[a-z0-9-]+\/[a-z0-9-]+$/, {
 export const CV_PATH_PATTERN = /^\/files\/[a-z0-9-]+\/[a-z0-9-]+\.pdf$/;
 
 /** Spaces a member can switch on (ADR-0006) */
-export const SPACES = ["kitchen", "photos", "training"] as const;
+export const SPACES = ["projects", "kitchen", "photos", "training"] as const;
 export type Space = (typeof SPACES)[number];
 
 // ── Member ──────────────────────────────────────────────────────────────────
@@ -131,7 +131,9 @@ export const memberFrontmatterSchema = z.strictObject({
     .optional(),
   /**
    * Extra pages ("spaces") on this member's hub, shown as tabs next to
-   * their profile (FR-42, ADR-0006): "kitchen" (recipes in
+   * their profile (FR-42, ADR-0006), in the order listed: "projects" (moves
+   * the member's projects off the profile into their own tab), "kitchen"
+   * (recipes in
    * content/members/<slug>/kitchen/), and "photos" and "training", which are
    * placeholder pages for now.
    */

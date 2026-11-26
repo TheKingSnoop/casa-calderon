@@ -3,8 +3,10 @@ name: Israel Calderon
 role: Software developer, cloud and systems
 order: 1
 published: false
+# 420px square, made with npm run images (metadata stripped)
+avatar: /images/israel/avatar-640.webp
 # Hub tabs next to the profile (ADR-0006). Recipes: content/members/israel/kitchen/
-spaces: [kitchen, photos, training]
+spaces: [projects, kitchen, photos, training]
 tagline: Cloud infrastructure, systems and software for government, healthcare and enterprise clients.
 links:
   linkedin: https://www.linkedin.com/in/israel-calderon-a2bb07432
